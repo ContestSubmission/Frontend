@@ -50,7 +50,8 @@ const config = {
 				}
 			},
 			borderRadius: {
-				lg: "var(--radius)",
+				DEFAULT: "var(--radius)",
+				lg: "calc(var(--radius) + 2px)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)"
 			},
@@ -59,6 +60,11 @@ const config = {
 			}
 		}
 	},
+	plugins: [
+		function({ addVariant }) {
+			addVariant("children", '& > *');
+		}
+	]
 };
 
 export default config;

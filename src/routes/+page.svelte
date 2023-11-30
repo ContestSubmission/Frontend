@@ -1,2 +1,31 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+    import {Button} from "$lib/components/ui/button";
+    import {Plus, Search} from 'lucide-svelte';
+    import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
+    import H1 from "$lib/components/utils/typography/H1.svelte";
+    import Container from "$lib/components/ui/container/Container.svelte";
+    import H2 from "$lib/components/utils/typography/H2.svelte";
+</script>
+
+<style>
+    :global(body) {
+        /* Placeholder, will be replaced by a video */
+        background-image: url("https://images.unsplash.com/photo-1516321497487-e288fb19713f");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        backdrop-filter: blur(0.5em);
+        min-height: 100vh;
+    }
+</style>
+
+<FullPageCentered class="flex justify-center gap-3">
+    <Container id="header-box" class="card px-14 py-8 backdrop-blur-lg">
+        <H1 class="text-6xl">ContestSubmission</H1>
+        <H2 class="text-5xl">Managing contests, but simple.</H2>
+    </Container>
+    <div class="buttons flex gap-2">
+        <Button variant="secondary"><Search class="mr-2 h-4 w-4"/> Search a Contest</Button>
+        <Button variant="secondary"><Plus class="mr-2 h-4 w-4"/> Search a Contest</Button>
+    </div>
+</FullPageCentered>

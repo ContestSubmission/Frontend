@@ -5,6 +5,7 @@
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
+    import Page from "./Page.svelte";
 </script>
 
 <svelte:head>
@@ -21,14 +22,16 @@
     </style>
 </svelte:head>
 
-<!-- negative z-index to allow clicks to navbar -->
-<FullPageCentered class="homepage flex justify-center gap-3 -z-10">
-    <Container id="header-box" class="card px-14 py-8 backdrop-blur-lg">
-        <H1 class="text-6xl">ContestSubmission</H1>
-        <H2 class="text-5xl">Managing contests, but simple.</H2>
-    </Container>
-    <div class="buttons flex gap-2">
-        <Button variant="secondary" href="/search"><Search class="mr-2 h-4 w-4"/> Search a Contest</Button>
-        <Button variant="secondary"><Plus class="mr-2 h-4 w-4"/> Search a Contest</Button>
-    </div>
-</FullPageCentered>
+<Page>
+    <!-- negative z-index to allow clicks to navbar -->
+    <FullPageCentered class="homepage flex justify-center gap-3 -z-10">
+        <Container id="header-box" class="card px-14 py-8 backdrop-blur-lg">
+            <H1 class="text-6xl">ContestSubmission</H1>
+            <H2 class="text-5xl">Managing contests, but simple.</H2>
+        </Container>
+        <div class="buttons flex gap-2">
+            <Button variant="secondary" href="/search"><Search class="mr-2 h-4 w-4"/> Search a Contest</Button>
+            <Button variant="secondary"><Plus class="mr-2 h-4 w-4"/> Search a Contest</Button>
+        </div>
+    </FullPageCentered>
+</Page>

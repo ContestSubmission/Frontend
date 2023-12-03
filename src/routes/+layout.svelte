@@ -4,7 +4,17 @@
     import {Avatar, AvatarFallback, AvatarImage} from "$lib/components/ui/avatar";
     import {page} from "$app/stores";
     import {Home} from "lucide-svelte";
+    import H2 from "$lib/components/utils/typography/H2.svelte";
+    import {pageName} from "$lib/page_props";
+    import {onNavigate} from "$app/navigation";
+
+    onNavigate(() => pageName.set(null));
 </script>
+
+<svelte:head>
+    <!-- either 'pageName | ContestSubmission' or 'ContestSubmission' -->
+    <title>{$pageName ? $pageName + " | " : ""}ContestSubmission</title>
+</svelte:head>
 
 <style>
     .navbar {
@@ -13,21 +23,24 @@
         padding: 1rem;
     }
 
-    .buttons {
+    .buttons, .home {
         display: flex;
         flex-wrap: nowrap;
         gap: 0.75rem;
     }
 </style>
 
-<div class="navbar">
+<div class="navbar z-80">
     <div class="home">
         {#if $page.route.id !== "/"}
-                <Button variant="secondary" href="/"><Home/></Button>
+            <Button variant="secondary" class="w-10 h-10 p-2" href="/"><Home/></Button>
+            {#if $pageName}
+                <H2>{$pageName}</H2>
+            {/if}
         {/if}
     </div>
     <div class="buttons">
-        <Button variant="secondary" href="?">Search a Contest</Button>
+        <Button variant="secondary" href="/search">Search a Contest</Button>
         <Button variant="secondary" href="?">Create a Contest</Button>
         <Button variant="secondary" href="?">Participations</Button>
         <Avatar>

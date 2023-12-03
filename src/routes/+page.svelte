@@ -8,7 +8,8 @@
 </script>
 
 <style>
-    :global(body) {
+    /* :has fixes the style on other pages (SPA with client-side routing) */
+    :global(body):has(.homepage) {
         /* Placeholder, will be replaced by a video */
         background-image: url("https://images.unsplash.com/photo-1516321497487-e288fb19713f");
         background-size: cover;
@@ -19,13 +20,14 @@
     }
 </style>
 
-<FullPageCentered class="flex justify-center gap-3">
+<!-- negative z-index to allow clicks to navbar -->
+<FullPageCentered class="homepage flex justify-center gap-3 -z-10">
     <Container id="header-box" class="card px-14 py-8 backdrop-blur-lg">
         <H1 class="text-6xl">ContestSubmission</H1>
         <H2 class="text-5xl">Managing contests, but simple.</H2>
     </Container>
     <div class="buttons flex gap-2">
-        <Button variant="secondary"><Search class="mr-2 h-4 w-4"/> Search a Contest</Button>
+        <Button variant="secondary" href="/search"><Search class="mr-2 h-4 w-4"/> Search a Contest</Button>
         <Button variant="secondary"><Plus class="mr-2 h-4 w-4"/> Search a Contest</Button>
     </div>
 </FullPageCentered>

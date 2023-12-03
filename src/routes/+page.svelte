@@ -7,18 +7,19 @@
     import H2 from "$lib/components/utils/typography/H2.svelte";
 </script>
 
-<style>
-    /* :has fixes the style on other pages (SPA with client-side routing) */
-    :global(body):has(.homepage) {
-        /* Placeholder, will be replaced by a video */
-        background-image: url("https://images.unsplash.com/photo-1516321497487-e288fb19713f");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        backdrop-filter: blur(0.5em);
-        min-height: 100vh;
-    }
-</style>
+<svelte:head>
+    <style>
+        html {
+            /* Placeholder, will be replaced by a video */
+            background-image: url("https://images.unsplash.com/photo-1516321497487-e288fb19713f");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            backdrop-filter: blur(0.5em);
+            min-height: 100vh;
+        }
+    </style>
+</svelte:head>
 
 <!-- negative z-index to allow clicks to navbar -->
 <FullPageCentered class="homepage flex justify-center gap-3 -z-10">

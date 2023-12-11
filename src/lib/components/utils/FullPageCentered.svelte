@@ -12,10 +12,12 @@
 </style>
 
 <script lang="ts">
-    let classes: string;
+    import { twMerge } from "tailwind-merge";
+
+    let classes: string = "";
     export { classes as class };
 </script>
 
-<div class={classes}>
+<div class={twMerge("-z-10", classes)}>
     <slot/>
 </div>

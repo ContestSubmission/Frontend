@@ -1,10 +1,12 @@
 <script lang="ts">
-    let classes: string;
+    import { twMerge } from "tailwind-merge";
+
+    let classes: string = "";
     export { classes as class };
 
-    export let id: string;
+    export let id: string = "";
 </script>
 
-<div class="children:text-center px-8 py-4 rounded bg-card bg-opacity-70 {classes}" {id}>
+<div class={twMerge("[&:not(text-center)]:text-center bg-secondary px-8 py-4 rounded backdrop-blur-lg bg-opacity-70", classes)} {id}>
     <slot/>
 </div>

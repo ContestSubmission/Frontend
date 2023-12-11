@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 export const formSchema = z.object({
     term: z.string().min(2).max(50)
 });

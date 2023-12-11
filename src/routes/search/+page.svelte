@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {pageName} from "$lib/page_props";
-    import {afterNavigate} from "$app/navigation";
-    import type {PageData} from "./$types";
+    import { pageName } from "$lib/page_props";
+    import { afterNavigate } from "$app/navigation";
+    import type { PageData } from "./$types";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import SearchForm from "./SearchForm.svelte";
@@ -11,7 +11,7 @@
         pageName.set("Search Contest");
     }
 
-    afterNavigate(setPageName)
+    afterNavigate(setPageName);
     setPageName();
 
     export let data: PageData;

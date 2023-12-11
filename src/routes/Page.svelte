@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {Button} from "$lib/components/ui/button";
-    import {Avatar, AvatarFallback, AvatarImage} from "$lib/components/ui/avatar";
-    import {page} from "$app/stores";
-    import {Home} from "lucide-svelte";
+    import { Button } from "$lib/components/ui/button";
+    import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar";
+    import { page } from "$app/stores";
+    import { Home } from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
-    import {pageName} from "$lib/page_props";
-    import {linkStyles} from "$lib/svelte_utils";
+    import { pageName } from "$lib/page_props";
+    import { linkStyles } from "$lib/svelte_utils";
 </script>
 
 <style>
@@ -25,7 +25,9 @@
 <div class="navbar z-80">
     <div class="home">
         {#if $page.route.id !== "/"}
-            <Button variant="secondary" class="w-10 h-10 p-2" href="/"><Home/></Button>
+            <Button variant="secondary" class="w-10 h-10 p-2" href="/">
+                <Home/>
+            </Button>
             <slot name="navbar-left">
                 {#if $pageName}
                     <H2>{$pageName}</H2>

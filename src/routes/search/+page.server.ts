@@ -1,7 +1,7 @@
-import type {Actions, PageServerLoad} from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
 import { superValidate } from "sveltekit-superforms/server";
 import { formSchema } from "./schema";
-import {fail} from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 
 export const load = (() => {
     return {

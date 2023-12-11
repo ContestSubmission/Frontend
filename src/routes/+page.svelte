@@ -1,6 +1,6 @@
 <script lang="ts">
-    import {Button} from "$lib/components/ui/button";
-    import {Plus, Search} from 'lucide-svelte';
+    import { Button } from "$lib/components/ui/button";
+    import { Plus, Search } from "lucide-svelte";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
@@ -30,8 +30,14 @@
             <H2 class="text-5xl">Managing contests, but simple.</H2>
         </Container>
         <div class="buttons flex gap-2">
-            <Button variant="secondary" href="/search"><Search class="mr-2 h-4 w-4"/> Search a Contest</Button>
-            <Button variant="secondary"><Plus class="mr-2 h-4 w-4"/> Search a Contest</Button>
+            <Button variant="secondary" href="/search">
+                <Search class="mr-2 h-4 w-4"/>
+                Search a Contest
+            </Button>
+            <Button variant="secondary">
+                <Plus class="mr-2 h-4 w-4"/>
+                Search a Contest
+            </Button>
         </div>
     </FullPageCentered>
 </Page>

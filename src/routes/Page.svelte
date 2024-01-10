@@ -49,7 +49,7 @@
             Participations
         </Button>
         <Avatar>
-            <AvatarImage src="https://avatars.githubusercontent.com/u/63104422?v=4"/>
+            <AvatarImage src="https://avatars.githubusercontent.com/u/63104422?v=4" alt="profile picture"/>
             <AvatarFallback>JH</AvatarFallback>
         </Avatar>
     </div>

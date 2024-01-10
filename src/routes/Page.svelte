@@ -5,7 +5,7 @@
     import {Home, Plus, Search, Medal} from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { pageName } from "$lib/page_props";
-    import { linkStyles } from "$lib/svelte_utils";
+    import {buttonNameBuilder, linkStyles} from "$lib/svelte_utils";
 </script>
 
 <style>
@@ -25,7 +25,7 @@
 <div class="navbar z-80">
     <div class="home">
         {#if $page.route.id !== "/"}
-            <Button variant="secondary" class="w-10 h-10 p-2" href="/">
+            <Button variant="secondary" class="w-10 h-10 p-2" href="/" builders={[buttonNameBuilder("Homepage")]}>
                 <Home/>
             </Button>
             <slot name="navbar-left">

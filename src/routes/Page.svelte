@@ -2,7 +2,7 @@
     import { Button } from "$lib/components/ui/button";
     import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar";
     import { page } from "$app/stores";
-    import { Home } from "lucide-svelte";
+    import {Home, Plus, Search, Medal} from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { pageName } from "$lib/page_props";
     import { linkStyles } from "$lib/svelte_utils";
@@ -36,9 +36,18 @@
         {/if}
     </div>
     <div class="buttons">
-        <Button variant="secondary" class={linkStyles("search", $page)} href="/search">Search a Contest</Button>
-        <Button variant="secondary" href="?">Create a Contest</Button>
-        <Button variant="secondary" href="?">Participations</Button>
+        <Button variant="secondary" class={linkStyles("search", $page)} href="/search">
+            <Search class="mr-2 h-4 w-4"/>
+            Search
+        </Button>
+        <Button variant="secondary" href="?">
+            <Plus class="mr-2 h-4 w-4"/>
+            Create
+        </Button>
+        <Button variant="secondary" href="?">
+            <Medal class="mr-2 h-4 w-4"/>
+            Participations
+        </Button>
         <Avatar>
             <AvatarImage src="https://avatars.githubusercontent.com/u/63104422?v=4"/>
             <AvatarFallback>JH</AvatarFallback>

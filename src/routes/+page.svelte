@@ -36,7 +36,7 @@
             </Button>
             <Button variant="secondary">
                 <Plus class="mr-2 h-4 w-4"/>
-                Search a Contest
+                Create a Contest
             </Button>
         </div>
     </FullPageCentered>

@@ -35,7 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@contestsubmission/api-client": "0.0.1-SNAPSHOT.40",
+		"@contestsubmission/api-client": "1.0.0-SNAPSHOT.51",
 		"bits-ui": "^0.9.9",
 		"clsx": "^2.0.0",
 		"formsnap": "^0.4.1",

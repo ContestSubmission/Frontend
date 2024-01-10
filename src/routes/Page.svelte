@@ -2,10 +2,11 @@
     import { Button } from "$lib/components/ui/button";
     import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar";
     import { page } from "$app/stores";
-    import {Home, Plus, Search, Medal} from "lucide-svelte";
+    import { Home, Medal, Plus, Search } from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { pageName } from "$lib/page_props";
-    import {buttonNameBuilder, linkStyles} from "$lib/svelte_utils";
+    import { buttonNameBuilder, linkStyles } from "$lib/svelte_utils";
+    import { PUBLIC_EXTRA_SCRIPT_URL as EXTRA_SCRIPT_URL } from "$env/static/public";
 </script>
 
 <style>
@@ -21,6 +22,12 @@
         gap: 0.75rem;
     }
 </style>
+
+<sveltekit:head>
+    {#if EXTRA_SCRIPT_URL}
+        <script type="text/javascript" src={EXTRA_SCRIPT_URL} crossorigin="anonymous" defer></script>
+    {/if}
+</sveltekit:head>
 
 <div class="navbar z-80">
     <div class="home">

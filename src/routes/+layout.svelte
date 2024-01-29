@@ -1,14 +1,8 @@
 <script lang="ts">
     import "../app.pcss";
-    import { pageName } from "$lib/page_props";
-    import { beforeNavigate } from "$app/navigation";
-
-    beforeNavigate(() => pageName.set(null));
 </script>
 
 <svelte:head>
-    <!-- either 'pageName | ContestSubmission' or 'ContestSubmission' -->
-    <title>{$pageName ? $pageName + " | " : ""}ContestSubmission</title>
     <style>
         html {
             min-height: 100vh;

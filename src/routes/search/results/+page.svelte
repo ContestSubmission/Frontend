@@ -1,7 +1,5 @@
 <script lang="ts">
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
-    import { pageName } from "$lib/page_props";
-    import { afterNavigate } from "$app/navigation";
     import SearchForm from "./SearchForm.svelte";
     import type { PageData } from "./$types";
     import Page from "../../Page.svelte";
@@ -10,18 +8,10 @@
     import colors from "tailwindcss/colors";
     import ContestCollection from "$lib/components/contest/ContestCollection.svelte";
 
-
-    function setPageName() {
-        pageName.set("Contest search results");
-    }
-
-    afterNavigate(setPageName);
-    setPageName();
-
     export let data: PageData;
 </script>
 
-<Page>
+<Page pageName="Contest search results">
     <!-- negative z-index to allow clicks to navbar -->
     {#await data.streamed.results}
         <FullPageCentered>

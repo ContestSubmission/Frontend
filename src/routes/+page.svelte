@@ -22,7 +22,7 @@
     </style>
 </svelte:head>
 
-<Page>
+<Page pageName="Home">
     <!-- negative z-index to allow clicks to navbar -->
     <FullPageCentered class="homepage flex justify-center gap-3 -z-10">
         <Container id="header-box" class="card px-14 py-8 backdrop-blur-lg">

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { Contest } from "@contestsubmission/api-client";
+    import type { ContestDTO } from "@contestsubmission/api-client";
     import ContestCard from "$lib/components/contest/ContestCard.svelte";
 
-    export let contests: Contest[] = [];
+    export let contests: ContestDTO[] = [];
 </script>
 
 <style>

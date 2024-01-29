@@ -5,7 +5,6 @@
     import { page } from "$app/stores";
     import { Home, Medal, Plus, Search } from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
-    import { pageName } from "$lib/page_props";
     import { buttonNameBuilder, linkStyles } from "$lib/svelte_utils";
     import { PUBLIC_EXTRA_SCRIPT_URL as EXTRA_SCRIPT_URL } from "$env/static/public";
     import { signIn, signOut } from "@auth/sveltekit/client";
@@ -20,6 +19,11 @@
         ?? $page.data.session?.user?.displayName?.split(" ").map((name) => name[0]).join("")
         ?? $page.data.session?.user?.name?.split(" ").map((name) => name[0]).join("") ?? "??")
         .substring(0, 2);
+
+    export let pageName: string;
+
+    let classes = "";
+    export { classes as class };
 </script>
 
 <style>
@@ -40,6 +44,8 @@
     {#if EXTRA_SCRIPT_URL}
         <script type="text/javascript" src={EXTRA_SCRIPT_URL} crossorigin="anonymous" defer></script>
     {/if}
+    <!-- either 'pageName | ContestSubmission' or 'ContestSubmission' -->
+    <title>{pageName ? pageName + " | " : ""}ContestSubmission</title>
 </sveltekit:head>
 
 <div class="navbar z-80">
@@ -49,8 +55,8 @@
                 <Home/>
             </Button>
             <slot name="navbar-left">
-                {#if $pageName}
-                    <H2>{$pageName}</H2>
+                {#if pageName}
+                    <H2>{pageName}</H2>
                 {/if}
             </slot>
         {/if}
@@ -64,7 +70,7 @@
             <Plus class="mr-2 h-4 w-4"/>
             Create
         </Button>
-        <Button variant="secondary" href="?">
+        <Button variant="secondary" class={linkStyles("participations", $page)} href="/participations">
             <Medal class="mr-2 h-4 w-4"/>
             Participations
         </Button>
@@ -88,6 +94,6 @@
     </div>
 </div>
 
-<div class="content">
+<div class="content {classes}">
     <slot/>
 </div>

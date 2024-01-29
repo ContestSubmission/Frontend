@@ -11,7 +11,8 @@ export interface MySession extends OGSession {
         lastName: string,
         email: string,
         image: string
-    }
+    },
+    access_token: string
 }
 
 export const load: LayoutServerLoad = async (event) => {

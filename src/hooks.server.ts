@@ -6,6 +6,9 @@ import {
 } from "$env/static/private";
 import type { OIDCConfig } from "@auth/core/providers";
 import type { CasdoorProfile } from "./types";
+import { PersonResourceApi } from "@contestsubmission/api-client";
+import { createConfig } from "$lib/client/api_client";
+import type { MySession } from "./routes/+layout.server";
 
 export const handle =
     SvelteKitAuth({
@@ -34,12 +37,20 @@ export const handle =
         ],
         callbacks: {
             async jwt({ token, account }) {
-                if (account)
+                if (account) {
                     token.access_token = account.access_token;
+                    token.id = account.providerAccountId;
+                    // fire-and-forget
+                    // required to create the DB entry for the user
+                    new PersonResourceApi(createConfig(account.access_token!)).personPost().then()
+                }
                 return token;
             },
             session({ session, token }) {
-                session.access_token = token.access_token;
+                (session as MySession).access_token = token.access_token;
+                if (session.user) {
+                    session.user.id = token.id;
+                }
                 return session
             }
         }

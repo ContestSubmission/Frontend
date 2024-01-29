@@ -14,14 +14,12 @@
 
     const contestId = $page.params.contestId;
 
-    let userId = $page.data?.session?.user.id;
-
     let contestData: Contest | null;
     let myTeam: Team | null = null;
-    const contest = Resources.contest.contestIdGet({ id: contestId })
+    const contest = Resources.contest.contestIdPersonalGet({ id: contestId })
         .then(data => {
             contestData = data;
-            myTeam = data.teams?.find(team => team.owner.id === userId) ?? null
+            myTeam = data.team;
             return data;
         });
 
@@ -83,8 +81,8 @@
             {:then contest}
                 <H1>{contest.name}</H1>
                 <p>{contest.description}</p>
-                {#if myTeam != null}
-                    <p class="pt-2">Your team: {myTeam.name}</p>
+                {#if contest.team != null}
+                    <p class="pt-2">Your team: {contest.team.name}</p>
                     <div class="pt-2 grid w-full max-w-sm items-center gap-1.5">
                         <Form {options} {form} schema={formSchema} let:config>
                             <FormField {config} name="file">

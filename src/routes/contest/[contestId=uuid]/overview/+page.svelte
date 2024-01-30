@@ -2,7 +2,7 @@
     import Page from "../../../Page.svelte";
     import { page } from "$app/stores";
     import { Resources } from "$lib/client/api_client.js";
-    import type { Contest, Team } from "@contestsubmission/api-client";
+    import type { PersonalContestDTO, Submission, Team } from "@contestsubmission/api-client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
@@ -14,18 +14,28 @@
 
     const contestId = $page.params.contestId;
 
-    let contestData: Contest | null;
+    let contestData: PersonalContestDTO | null;
     let myTeam: Team | null = null;
     const contest = Resources.contest.contestIdPersonalGet({ id: contestId })
         .then(data => {
             contestData = data;
-            myTeam = data.team;
+            myTeam = data.team ?? null;
+            if (data.submissions) {
+                // find by handedInAt
+                lastSubmission = data.submissions.reduce((prev, curr) => {
+                    if (prev == null) return curr;
+                    if (curr.handedInAt > prev.handedInAt) return curr;
+                    return prev;
+                }, null);
+            }
             return data;
         });
 
     let state: "idle" | "uploading" | "submitting" | "success" | "error" = "idle";
     let file: File | null = null;
     let uploadedUrl: string | null = null;
+
+    let lastSubmission: Submission |  null;
 
     function handleChange(event: Event) {
         file = event.target!.files[0]
@@ -54,7 +64,7 @@
         state = "submitting";
 
         let url = preSignedPost.url + "/" + preSignedPost.conditions.key;
-        await Resources.submission.contestContestIdSubmissionTeamIdSubmitPost({
+        let submission = await Resources.submission.contestContestIdSubmissionTeamIdSubmitPost({
             contestId: contestId,
             teamId: myTeam!.id!,
             handInSubmissionDTO: {
@@ -64,6 +74,7 @@
         });
         state = "success";
         uploadedUrl = url;
+        lastSubmission = submission
     }
 
     export let form: SuperValidated<FormSchema>;
@@ -107,6 +118,9 @@
                                     Error!
                                 {/if}
                             </p>
+                        {/if}
+                        {#if lastSubmission != null}
+                            <A class="p-2" href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
                         {/if}
                     </div>
                 {/if}

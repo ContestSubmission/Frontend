@@ -1,13 +1,13 @@
 import {
-    ContestResourceApi,
-    TeamResourceApi,
     Configuration,
-    SubmissionResourceApi
+    ContestResourceApi,
+    ResponseError,
+    SubmissionResourceApi,
+    TeamInviteResourceApi,
+    TeamResourceApi
 } from "@contestsubmission/api-client";
 
-import {
-    PUBLIC_BACKEND_BASE_PATH as BACKEND_BASE_PATH
-} from "$env/static/public"
+import { PUBLIC_BACKEND_BASE_PATH as BACKEND_BASE_PATH } from "$env/static/public";
 
 export class Resources {
 
@@ -15,11 +15,13 @@ export class Resources {
 
     private contestResource: ContestResourceApi;
     private teamResource: TeamResourceApi;
+    private inviteResource: TeamInviteResourceApi;
     private submissionResource: SubmissionResourceApi;
 
     constructor(config: Configuration) {
         this.contestResource = new ContestResourceApi(config);
         this.teamResource = new TeamResourceApi(config);
+        this.inviteResource = new TeamInviteResourceApi(config);
         this.submissionResource = new SubmissionResourceApi(config);
     }
 
@@ -29,6 +31,10 @@ export class Resources {
 
     static get team() {
         return Resources.instance.teamResource;
+    }
+
+    static get invite() {
+        return Resources.instance.inviteResource;
     }
 
     static get submission() {
@@ -51,4 +57,12 @@ export function createConfig(access_token: string) {
             Authorization: `Bearer ${access_token}`
         }
     });
+}
+
+/**
+ * Handles the error by logging it and returning `null` instead
+ */
+export function responseErrorHandler(error: ResponseError): null {
+    console.error("Response Error occurred!", error);
+    return null
 }

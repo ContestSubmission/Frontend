@@ -3,9 +3,10 @@ import { superValidate } from "sveltekit-superforms/server";
 import { formSchema } from "./upload-schema";
 import { fail } from "@sveltejs/kit";
 
-export const load = (() => {
+export const load = (({ url }) => {
     return {
-        form: superValidate(formSchema)
+        form: superValidate(formSchema),
+        fromInvite: url.searchParams.get("fromInvite") == "true"
     };
 }) satisfies PageServerLoad;
 

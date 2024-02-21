@@ -27,5 +27,14 @@ module.exports = {
 				parser: '@typescript-eslint/parser'
 			}
 		}
-	]
+	],
+	rules: {
+		// disable the base rule as it can report incorrect errors
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": ["warn",
+			{
+				// why isn't this the default?? shitty ass linter 💀
+				argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_"
+			}],
+	}
 };

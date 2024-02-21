@@ -9,7 +9,6 @@ export function linkStyles(url: string,
 }
 
 export const buttonNameBuilder = (name: string): Builder => ({
-    // @ts-expect-error it works anyway lmfao
     action: (node: HTMLButtonElement) => {
         node.name = name;
         node.ariaLabel = name;

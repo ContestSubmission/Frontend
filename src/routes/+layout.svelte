@@ -1,5 +1,6 @@
 <script lang="ts">
     import "../app.pcss";
+    import { Toaster } from "$lib/components/ui/sonner";
 </script>
 
 <svelte:head>
@@ -13,5 +14,12 @@
         }
     </style>
 </svelte:head>
+
+<Toaster
+    closeButton
+    richColors
+    theme="system"
+    style="--toast-close-button-start: unset; --toast-close-button-end: -15px;"
+/>
 
 <slot/>

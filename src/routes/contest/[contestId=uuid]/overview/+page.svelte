@@ -1,16 +1,20 @@
 <script lang="ts">
     import Page from "../../../Page.svelte";
     import { page } from "$app/stores";
-    import { Resources } from "$lib/client/api_client.js";
-    import type { PersonalContestDTO, Submission, Team } from "@contestsubmission/api-client";
+    import { Resources, responseErrorHandler } from "$lib/client/api_client.js";
+    import type { PersonalContestDTO, PreSignedPost, Submission, Team } from "@contestsubmission/api-client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
     import type { SuperValidated } from "sveltekit-superforms";
     import { formSchema, type FormSchema } from "./upload-schema";
     import type { FormOptions } from "formsnap";
-    import { Form, FormButton, FormItem, FormField, FormInput, FormValidation } from "$lib/components/ui/form";
+    import { Form, FormButton, FormField, FormInput, FormItem, FormValidation } from "$lib/components/ui/form";
     import A from "$lib/components/utils/typography/A.svelte";
+    import { toast } from "svelte-sonner";
+    import { browser } from "$app/environment";
+    import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
 
     const contestId = $page.params.contestId;
 
@@ -45,11 +49,15 @@
         state = "uploading";
         // copy or something
         const fileToUpload = file!;
-        const preSignedPost = await Resources.submission.contestContestIdSubmissionTeamIdGetPresignedUrlGet({
+        const preSignedPost: PreSignedPost | null = await Resources.submission.contestContestIdSubmissionTeamIdGetPresignedUrlGet({
             contestId: contestId,
             teamId: myTeam!.id!,
             fileName: fileToUpload.name
-        });
+        }).catch(responseErrorHandler);
+        if (preSignedPost == null) {
+            state = "error";
+            return;
+        }
 
         const formData = new FormData();
         Object.entries(preSignedPost.conditions).forEach(([k, v]) => {
@@ -64,17 +72,21 @@
         state = "submitting";
 
         let url = preSignedPost.url + "/" + preSignedPost.conditions.key;
-        let submission = await Resources.submission.contestContestIdSubmissionTeamIdSubmitPost({
+        let submission: Submission | null = await Resources.submission.contestContestIdSubmissionTeamIdSubmitPost({
             contestId: contestId,
             teamId: myTeam!.id!,
             handInSubmissionDTO: {
                 jwt: preSignedPost.jwt,
                 url: url
             }
-        });
+        }).catch(responseErrorHandler);
+        if (submission == null) {
+            state = "error";
+            return;
+        }
         state = "success";
         uploadedUrl = url;
-        lastSubmission = submission
+        lastSubmission = submission;
     }
 
     export let form: SuperValidated<FormSchema>;
@@ -82,6 +94,24 @@
     const options: FormOptions<typeof formSchema> = {
         onSubmit: handleSubmit
     }
+
+    onMount(() => {
+        if (browser && $page.data.fromInvite) {
+            toast.success("Joined Contest", {
+                description: "Successfully joined this contest. Good luck!",
+                duration: Number.POSITIVE_INFINITY,
+                classes: {
+                    toast: "bg-secondary"
+                }
+            });
+
+            // remove the fromInvite flag from the URL
+            // this is done to prevent the toast from showing again if the user refreshes the page
+            let query = new URLSearchParams($page.url.searchParams.toString());
+            query.delete("fromInvite");
+            goto("?" + query.toString(), { replaceState: true });
+        }
+    });
 </script>
 
 <Page pageName={contestData?.name ?? "Contest loading..."}>

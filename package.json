@@ -38,7 +38,7 @@
 	"dependencies": {
 		"@auth/core": "^0.22.0",
 		"@auth/sveltekit": "^0.8.0",
-		"@contestsubmission/api-client": "2.8.0-SNAPSHOT.137",
+		"@contestsubmission/api-client": "2.8.0",
 		"bits-ui": "^0.9.9",
 		"clsx": "^2.0.0",
 		"formsnap": "^0.4.1",

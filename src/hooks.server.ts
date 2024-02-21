@@ -6,8 +6,6 @@ import {
 } from "$env/static/private";
 import type { OIDCConfig } from "@auth/core/providers";
 import type { CasdoorProfile } from "./types";
-import { PersonResourceApi } from "@contestsubmission/api-client";
-import { createConfig } from "$lib/client/api_client";
 import type { MySession } from "./routes/+layout.server";
 
 export const handle =
@@ -42,7 +40,6 @@ export const handle =
                     token.id = account.providerAccountId;
                     // fire-and-forget
                     // required to create the DB entry for the user
-                    new PersonResourceApi(createConfig(account.access_token!)).personPost().then()
                 }
                 return token;
             },

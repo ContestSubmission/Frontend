@@ -125,7 +125,7 @@
                 {#if contest.team != null}
                     <p class="pt-2">Your team: {contest.team.name}</p>
                     <div class="pt-2 grid w-full max-w-sm items-center gap-1.5">
-                        <Form {options} {form} schema={formSchema} let:config>
+                        <Form {options} {form} schema={formSchema} let:config enctype="multipart/form-data">
                             <FormField {config} name="file">
                                 <FormItem>
                                     <FormInput type="file" on:change={handleChange} />

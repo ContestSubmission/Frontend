@@ -54,11 +54,10 @@
             <Button variant="secondary" class="w-10 h-10 p-2" href="/" builders={[buttonNameBuilder("Homepage")]}>
                 <Home/>
             </Button>
-            <slot name="navbar-left">
-                {#if pageName}
-                    <H2>{pageName}</H2>
-                {/if}
-            </slot>
+            <slot name="navbar-left"/>
+            {#if pageName}
+                <H2>{pageName}</H2>
+            {/if}
         {/if}
     </div>
     <div class="buttons">

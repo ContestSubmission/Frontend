@@ -4,6 +4,7 @@ import {
     ResponseError,
     SubmissionResourceApi,
     TeamInviteResourceApi,
+    GradeResourceApi,
     TeamResourceApi
 } from "@contestsubmission/api-client";
 
@@ -17,12 +18,14 @@ export class Resources {
     private teamResource: TeamResourceApi;
     private inviteResource: TeamInviteResourceApi;
     private submissionResource: SubmissionResourceApi;
+    private gradeResource: GradeResourceApi;
 
     constructor(config: Configuration) {
         this.contestResource = new ContestResourceApi(config);
         this.teamResource = new TeamResourceApi(config);
         this.inviteResource = new TeamInviteResourceApi(config);
         this.submissionResource = new SubmissionResourceApi(config);
+        this.gradeResource = new GradeResourceApi(config);
     }
 
     static get contest() {
@@ -39,6 +42,10 @@ export class Resources {
 
     static get submission() {
         return Resources.instance.submissionResource;
+    }
+
+    static get grade() {
+        return Resources.instance.gradeResource;
     }
 }
 

@@ -39,8 +39,13 @@
             return data;
         });
 */
-    let contest: Promise<PersonalContestDTO> = mayResolve($contestCache[contestId])
-        ?? loadContest(contestId, $contestCache);
+    let contestData: PersonalContestDTO | null;
+    let contest: Promise<PersonalContestDTO> = (mayResolve($contestCache[contestId])
+            ?? loadContest(contestId, $contestCache))
+        .then(contest => {
+            contestData = contest;
+            return contest;
+        });
 
     let state: "idle" | "uploading" | "submitting" | "success" | "error" = "idle";
     let file: File | null = null;
@@ -52,13 +57,13 @@
         file = event.target!.files[0]
     }
 
-    async function handleSubmit(contest: PersonalContestDTO) {
+    async function handleSubmit() {
         state = "uploading";
         // copy or something
         const fileToUpload = file!;
         const preSignedPost: PreSignedPost | null = await Resources.submission.contestContestIdSubmissionTeamIdGetPresignedUrlGet({
             contestId: contestId,
-            teamId: contest.team!.id!,
+            teamId: contestData.team!.id!,
             fileName: fileToUpload.name
         }).catch(responseErrorHandler);
         if (preSignedPost == null) {
@@ -81,7 +86,7 @@
         let url = preSignedPost.url + "/" + preSignedPost.conditions.key;
         let submission: Submission | null = await Resources.submission.contestContestIdSubmissionTeamIdSubmitPost({
             contestId: contestId,
-            teamId: contest.team!.id!,
+            teamId: contestData.team!.id!,
             handInSubmissionDTO: {
                 jwt: preSignedPost.jwt,
                 url: url
@@ -143,7 +148,7 @@
                                     <FormValidation class="mt-0 pt-0 text-red-500"/>
                                 </FormItem>
                             </FormField>
-                            <FormButton class="mt-2">
+                            <FormButton class="mt-2" disabled={state === "uploading" || state === "submitting"}>
                                 Upload
                             </FormButton>
                         </Form>

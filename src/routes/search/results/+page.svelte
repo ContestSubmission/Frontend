@@ -11,7 +11,7 @@
     export let data: PageData;
 </script>
 
-<Page pageName="Contest search results">
+<Page pageName={null}>
     <!-- negative z-index to allow clicks to navbar -->
     {#await data.streamed.results}
         <FullPageCentered>

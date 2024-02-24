@@ -2,7 +2,7 @@
     import Page from "../../../Page.svelte";
     import { page } from "$app/stores";
     import { Resources, responseErrorHandler } from "$lib/client/api_client.js";
-    import type { Contest, PersonalContestDTO, PreSignedPost, Submission, Team } from "@contestsubmission/api-client";
+    import type { PersonalContestDTO, PreSignedPost, Submission } from "@contestsubmission/api-client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";

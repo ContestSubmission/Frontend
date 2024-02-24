@@ -7,7 +7,10 @@
     import { addSortBy } from "svelte-headless-table/plugins";
     import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
     import { Button } from "$lib/components/ui/button";
-    import GradingDropDown from "$lib/components/contest/grading/GradingDropDown.svelte";
+    import GradingDropDown from "./GradingDropDown.svelte";
+    import type { SuperValidated } from "sveltekit-superforms";
+    import type { FormSchema } from "./schema";
+    import P from "$lib/components/utils/typography/P.svelte";
 
     export let data: GradeTeamOverviewDTO[];
     export let contest: PersonalContestDTO;
@@ -20,6 +23,8 @@
         }),
     });
 
+    export let form: SuperValidated<FormSchema>;
+
     const columns = table.createColumns([
         table.column({
             id: "team",
@@ -31,7 +36,7 @@
             accessor: "submission",
             cell: ({value}) => value && value.url && value.fileName
                 ? createRender(A, {href: value.url, target: "_blank"}).slot(value.fileName)
-                : "No submission",
+                : createRender(P, {class: "text-red-500"}).slot("No submission"),
             plugins: {
                 sort: {
                     disable: true
@@ -40,11 +45,11 @@
         }),
         table.column({
             header: "Score",
-            accessor: "score"
+            accessor: ({ score, submission }) => submission ? score : "-"
         }),
         table.column({
             header: "",
-            accessor: ({ team, submission }) => ({ teamId: team.id, submissionId: submission?.id ?? null, contest }),
+            accessor: (grading) => ({ grading, contest, form }),
             cell: ({ value }) => {
                 return createRender(GradingDropDown, value);
             },
@@ -59,23 +64,23 @@
     const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
         table.createViewModel(columns);
 
-    const rowClasses = "hover:bg-muted/50 bg-secondary";
+    const rowClasses = "hover:bg-accent/50";
 </script>
 
 
-<div class="rounded-md border min-w-[50vw]">
+<div class="rounded-md border min-w-[50vw] bg-secondary">
     <Table {...$tableAttrs}>
         <TableHeader>
             {#each $headerRows as headerRow}
                 <Subscribe rowAttrs={headerRow.attrs()}>
-                    <TableRow class={rowClasses}>
+                    <TableRow class="bg-accent hover:bg-accent">
                         {#each headerRow.cells as cell (cell.id)}
                             <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
                                 <TableHead {...attrs} class="text-center">
                                     {#if props.sort.disabled}
                                         <Render of={cell.render()} />
                                     {:else}
-                                        <Button variant="ghost" on:click={props.sort.toggle}>
+                                        <Button variant="ghost" class="hover:bg-secondary" on:click={props.sort.toggle}>
                                             <Render of={cell.render()} />
                                             {#if props.sort.order === "desc"}
                                                 <ArrowDown class={"ml-2 h-4 w-4"} />

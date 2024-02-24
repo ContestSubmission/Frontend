@@ -9,10 +9,11 @@
     import { contestCache, loadContest } from "$lib/contest_cache";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { Resources } from "$lib/client/api_client";
-    import GradingTable from "$lib/components/contest/grading/GradingTable.svelte";
+    import GradingTable from "./GradingTable.svelte";
     import { mayResolve } from "$lib/contest_cache.js";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { isOngoing } from "$lib/contest_utils.js";
+    import type { PageData } from "./$types";
 
     if (browser && !$page.data.session) {
         signIn("oidc");
@@ -23,6 +24,8 @@
     let contest: Promise<PersonalContestDTO> = mayResolve($contestCache[contestId])
         ?? loadContest(contestId, $contestCache);
     let toGrade: Promise<GradeTeamOverviewDTO[]> = Resources.grade.contestContestIdGradeListGet({contestId});
+
+    export let data: PageData;
 </script>
 
 <Page pageName="Grade submissions">
@@ -46,7 +49,7 @@
                     {/if}
                 </div>
 
-                <GradingTable data={toGrade} {contest} />
+                <GradingTable data={toGrade} {contest} form={data.form} />
             {/await}
         {:catch error}
             <p>{error.message}</p>

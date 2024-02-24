@@ -20,7 +20,7 @@
         ?? $page.data.session?.user?.name?.split(" ").map((name) => name[0]).join("") ?? "??")
         .substring(0, 2);
 
-    export let pageName: string;
+    export let pageName: string | null;
 
     let classes = "";
     export { classes as class };
@@ -69,10 +69,12 @@
             <Plus class="mr-2 h-4 w-4"/>
             Create
         </Button>
-        <Button variant="secondary" class={linkStyles("participations", $page)} href="/participations">
-            <Medal class="mr-2 h-4 w-4"/>
-            Participations
-        </Button>
+        {#if $page.data.session != null}
+            <Button variant="secondary" class={linkStyles("participations", $page)} href="/participations">
+                <Medal class="mr-2 h-4 w-4"/>
+                Participations
+            </Button>
+        {/if}
         {#if $page.data.session != null}
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger class="h-fit">

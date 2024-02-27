@@ -44,6 +44,11 @@
             ?? loadContest(contestId, $contestCache))
         .then(contest => {
             contestData = contest;
+            lastSubmission = contest.submissions?.reduce((prev, curr) => {
+                if (prev == null) return curr;
+                if (curr.handedInAt > prev.handedInAt) return curr;
+                return prev;
+            }, null) ?? null;
             return contest;
         });
 

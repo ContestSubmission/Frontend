@@ -16,6 +16,7 @@
     import { Resources } from "$lib/client/api_client";
     import type { uuid } from "$lib/types";
     import { Circle } from "svelte-loading-spinners";
+    import { createEventDispatcher, onMount } from "svelte";
 
     export let grading: GradeTeamOverviewDTO;
 
@@ -24,6 +25,16 @@
     export let open: boolean;
 
     export let contestId: uuid;
+
+    const dispatch = createEventDispatcher();
+
+    onMount(() => {
+        // pre-fill form with previous grading, if present
+        if (grading.personalGrade) {
+            form.grade = grading.personalGrade!.score!;
+            form.comment = grading.personalGrade!.comment!;
+        }
+    })
 
     async function handleSubmit() {
         state = "submitting";
@@ -35,6 +46,8 @@
                 comment: form.comment
             }
         });
+        // notify parent to re-fetch its scores
+        dispatch("update");
         open = false;
         state = "idle"
     }

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createRender, createTable, Render, Subscribe } from "svelte-headless-table";
-    import { readable } from "svelte/store";
+    import { writable } from "svelte/store";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$lib/components/ui/table";
     import A from "$lib/components/utils/typography/A.svelte";
@@ -11,11 +11,18 @@
     import type { SuperValidated } from "sveltekit-superforms";
     import type { FormSchema } from "./schema";
     import P from "$lib/components/utils/typography/P.svelte";
+    import { isOngoing } from "$lib/contest_utils";
+    import { Resources } from "$lib/client/api_client";
 
-    export let data: GradeTeamOverviewDTO[];
+    let dataExport: GradeTeamOverviewDTO[];
+
+    export { dataExport as data };
+
     export let contest: PersonalContestDTO;
 
-    const table = createTable(readable(data), {
+    let data = writable(dataExport);
+
+    const table = createTable(data, {
         sort: addSortBy({
             initialSortKeys: [
                 { id: "team", order: "asc" }
@@ -36,7 +43,7 @@
             accessor: "submission",
             cell: ({value}) => value && value.url && value.fileName
                 ? createRender(A, {href: value.url, target: "_blank"}).slot(value.fileName)
-                : createRender(P, {class: "text-red-500"}).slot("No submission"),
+                : createRender(P, {class: isOngoing(contest) ? "text-orange-400" : "text-red-500"}).slot("No submission"),
             plugins: {
                 sort: {
                     disable: true
@@ -51,7 +58,11 @@
             header: "",
             accessor: (grading) => ({ grading, contest, form }),
             cell: ({ value }) => {
-                return createRender(GradingDropDown, value);
+                return createRender(GradingDropDown, value)
+                    .on("update", async (_) => {
+                        let val = await Resources.grade.contestContestIdGradeListGet({contestId: contest.id});
+                        data.set(val);
+                    });
             },
             plugins: {
                 sort: {

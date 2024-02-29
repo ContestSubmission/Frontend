@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
     import { MoreHorizontal } from "lucide-svelte";
-    import type { GradeTeamOverviewDTO, PersonalContestDTO } from "../../../../../../Backend/build/api-client";
+    import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { isOngoing } from "$lib/contest_utils";
     import {
         DropdownMenu,
@@ -64,5 +64,5 @@
             </DropdownMenuGroup>
         </DropdownMenuContent>
     </DropdownMenu>
-    <GradingPopup contestId={contest.id} {grading} bind:open={gradeDialogOpen} {form}/>
+    <GradingPopup contestId={contest.id} {grading} bind:open={gradeDialogOpen} {form} on:update/>
 </Dialog>

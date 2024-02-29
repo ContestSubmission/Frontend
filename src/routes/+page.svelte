@@ -5,7 +5,7 @@
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
-    import Page from "./Page.svelte";
+    import Page from "$lib/components/Page.svelte";
 </script>
 
 <svelte:head>

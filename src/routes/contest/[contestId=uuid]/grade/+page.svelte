@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Page from "../../../Page.svelte";
+    import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import { AlertTriangle, ArrowLeft } from "lucide-svelte";

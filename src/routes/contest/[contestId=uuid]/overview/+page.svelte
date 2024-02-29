@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Page from "../../../Page.svelte";
+    import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
     import { Resources, responseErrorHandler } from "$lib/client/api_client.js";
     import type { PersonalContestDTO, PreSignedPost, Submission } from "@contestsubmission/api-client";

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Page from "../Page.svelte";
+    import Page from "$lib/components/Page.svelte";
     import { Resources } from "$lib/client/api_client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import { Stretch } from "svelte-loading-spinners";

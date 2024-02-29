@@ -1,13 +1,12 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-    import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar";
     import { page } from "$app/stores";
     import { Home, Medal, Plus, Search } from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { buttonNameBuilder, linkStyles } from "$lib/svelte_utils";
     import { PUBLIC_EXTRA_SCRIPT_URL as EXTRA_SCRIPT_URL } from "$env/static/public";
     import { signIn, signOut } from "@auth/sveltekit/client";
+    import UserDropdown from "$lib/components/UserDropdown.svelte";
 
     let user = $page.data.session?.user;
     let avatar = user?.image;
@@ -76,17 +75,7 @@
             </Button>
         {/if}
         {#if $page.data.session != null}
-            <DropdownMenu.Root>
-                <DropdownMenu.Trigger class="h-fit">
-                    <Avatar>
-                        <AvatarImage src={avatar} alt="profile picture"/>
-                        <AvatarFallback>{initials}</AvatarFallback>
-                    </Avatar>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                    <DropdownMenu.Item on:click={() => signOut()}>Logout</DropdownMenu.Item>
-                </DropdownMenu.Content>
-            </DropdownMenu.Root>
+            <UserDropdown {avatar} {initials}/>
         {:else}
             <Button variant="secondary" on:click={() => signIn('oidc')}>
                 Login

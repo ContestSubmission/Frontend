@@ -1,8 +1,8 @@
 <script lang="ts">
-    import Page from "../../../Page.svelte";
+    import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
     import { Resources, responseErrorHandler } from "$lib/client/api_client.js";
-    import type { PersonalContestDTO, PreSignedPost, Submission, Team } from "@contestsubmission/api-client";
+    import type { PersonalContestDTO, PreSignedPost, Submission } from "@contestsubmission/api-client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
@@ -15,9 +15,12 @@
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
+    import { Button } from "$lib/components/ui/button";
+    import { contestCache, loadContest, mayResolve } from "$lib/contest_cache";
 
     const contestId = $page.params.contestId;
 
+/*
     let contestData: PersonalContestDTO | null;
     let myTeam: Team | null = null;
     const contest = Resources.contest.contestIdPersonalGet({ id: contestId })
@@ -32,7 +35,21 @@
                     return prev;
                 }, null);
             }
+            $contestCache[contestId] = data;
             return data;
+        });
+*/
+    let contestData: PersonalContestDTO | null;
+    let contest: Promise<PersonalContestDTO> = (mayResolve($contestCache[contestId])
+            ?? loadContest(contestId, $contestCache))
+        .then(contest => {
+            contestData = contest;
+            lastSubmission = contest.submissions?.reduce((prev, curr) => {
+                if (prev == null) return curr;
+                if (curr.handedInAt > prev.handedInAt) return curr;
+                return prev;
+            }, null) ?? null;
+            return contest;
         });
 
     let state: "idle" | "uploading" | "submitting" | "success" | "error" = "idle";
@@ -51,7 +68,7 @@
         const fileToUpload = file!;
         const preSignedPost: PreSignedPost | null = await Resources.submission.contestContestIdSubmissionTeamIdGetPresignedUrlGet({
             contestId: contestId,
-            teamId: myTeam!.id!,
+            teamId: contestData.team!.id!,
             fileName: fileToUpload.name
         }).catch(responseErrorHandler);
         if (preSignedPost == null) {
@@ -74,7 +91,7 @@
         let url = preSignedPost.url + "/" + preSignedPost.conditions.key;
         let submission: Submission | null = await Resources.submission.contestContestIdSubmissionTeamIdSubmitPost({
             contestId: contestId,
-            teamId: myTeam!.id!,
+            teamId: contestData.team!.id!,
             handInSubmissionDTO: {
                 jwt: preSignedPost.jwt,
                 url: url
@@ -114,14 +131,18 @@
     });
 </script>
 
-<Page pageName={contestData?.name ?? "Contest loading..."}>
+<Page pageName="Contest overview">
     <FullPageCentered>
         <Container class="flex flex-col justify-between p-4">
             {#await contest}
                 <p>Loading...</p>
             {:then contest}
                 <H1>{contest.name}</H1>
-                <p>{contest.description}</p>
+                <p class="mb-5">{contest.description}</p>
+                <!-- will be replaced by RBAC later -->
+                {#if contest.publicGrading || contest.organizer.id === $page.data?.session?.user.id}
+                    <Button href="grade">View submissions</Button>
+                {/if}
                 {#if contest.team != null}
                     <p class="pt-2">Your team: {contest.team.name}</p>
                     <div class="pt-2 grid w-full max-w-sm items-center gap-1.5">
@@ -132,7 +153,7 @@
                                     <FormValidation class="mt-0 pt-0 text-red-500"/>
                                 </FormItem>
                             </FormField>
-                            <FormButton class="mt-2">
+                            <FormButton class="mt-2" disabled={state === "uploading" || state === "submitting"}>
                                 Upload
                             </FormButton>
                         </Form>

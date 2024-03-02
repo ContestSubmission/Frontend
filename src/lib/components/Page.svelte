@@ -1,13 +1,12 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-    import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar";
     import { page } from "$app/stores";
     import { Home, Medal, Plus, Search } from "lucide-svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { buttonNameBuilder, linkStyles } from "$lib/svelte_utils";
     import { PUBLIC_EXTRA_SCRIPT_URL as EXTRA_SCRIPT_URL } from "$env/static/public";
     import { signIn, signOut } from "@auth/sveltekit/client";
+    import UserDropdown from "$lib/components/UserDropdown.svelte";
 
     let user = $page.data.session?.user;
     let avatar = user?.image;
@@ -20,7 +19,7 @@
         ?? $page.data.session?.user?.name?.split(" ").map((name) => name[0]).join("") ?? "??")
         .substring(0, 2);
 
-    export let pageName: string;
+    export let pageName: string | null;
 
     let classes = "";
     export { classes as class };
@@ -54,11 +53,10 @@
             <Button variant="secondary" class="w-10 h-10 p-2" href="/" builders={[buttonNameBuilder("Homepage")]}>
                 <Home/>
             </Button>
-            <slot name="navbar-left">
-                {#if pageName}
-                    <H2>{pageName}</H2>
-                {/if}
-            </slot>
+            <slot name="navbar-left"/>
+            {#if pageName}
+                <H2>{pageName}</H2>
+            {/if}
         {/if}
     </div>
     <div class="buttons">
@@ -70,22 +68,14 @@
             <Plus class="mr-2 h-4 w-4"/>
             Create
         </Button>
-        <Button variant="secondary" class={linkStyles("participations", $page)} href="/participations">
-            <Medal class="mr-2 h-4 w-4"/>
-            Participations
-        </Button>
         {#if $page.data.session != null}
-            <DropdownMenu.Root>
-                <DropdownMenu.Trigger class="h-fit">
-                    <Avatar>
-                        <AvatarImage src={avatar} alt="profile picture"/>
-                        <AvatarFallback>{initials}</AvatarFallback>
-                    </Avatar>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                    <DropdownMenu.Item on:click={() => signOut()}>Logout</DropdownMenu.Item>
-                </DropdownMenu.Content>
-            </DropdownMenu.Root>
+            <Button variant="secondary" class={linkStyles("participations", $page)} href="/participations">
+                <Medal class="mr-2 h-4 w-4"/>
+                Participations
+            </Button>
+        {/if}
+        {#if $page.data.session != null}
+            <UserDropdown {avatar} {initials}/>
         {:else}
             <Button variant="secondary" on:click={() => signIn('oidc')}>
                 Login

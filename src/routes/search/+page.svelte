@@ -3,7 +3,7 @@
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import SearchForm from "./SearchForm.svelte";
-    import Page from "../Page.svelte";
+    import Page from "$lib/components/Page.svelte";
 
     export let data: PageData;
 </script>

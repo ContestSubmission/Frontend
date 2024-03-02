@@ -12,7 +12,7 @@
     <form {...attrs} method="get" action="" class="flex flex-row justify-center items-start w-80">
         <Form.Field {config} name="term">
             <Form.Item>
-                <Form.Input class="bg-secondary text-primary-foreground" placeholder="Search term" {defaultValue}/>
+                <Form.Input class="text-primary-foreground bg-background" placeholder="Search term" {defaultValue}/>
                 <Form.Validation class="mt-0 pt-0 text-red-500"/>
             </Form.Item>
         </Form.Field>

@@ -7,6 +7,6 @@
     export let id: string = "";
 </script>
 
-<div class={twMerge("[&:not(text-center)]:text-center bg-secondary px-8 py-4 rounded backdrop-blur-lg bg-opacity-70", classes)} {id}>
+<div class={twMerge("[&:not(text-center)]:text-center bg-background px-8 py-4 rounded backdrop-blur-lg bg-opacity-70", classes)} {id}>
     <slot/>
 </div>

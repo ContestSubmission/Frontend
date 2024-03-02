@@ -2,7 +2,7 @@
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import SearchForm from "./SearchForm.svelte";
     import type { PageData } from "./$types";
-    import Page from "../../Page.svelte";
+    import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
     import { Stretch } from "svelte-loading-spinners";
     import colors from "tailwindcss/colors";
@@ -11,7 +11,7 @@
     export let data: PageData;
 </script>
 
-<Page pageName="Contest search results">
+<Page pageName={null}>
     <!-- negative z-index to allow clicks to navbar -->
     {#await data.streamed.results}
         <FullPageCentered>

@@ -19,3 +19,9 @@ export async function streamToString(stream: ReadableStream) {
 
     return read();
 }
+
+export function parseInteger(str?: string) {
+    if (!str) return null;
+    const result = parseInt(str, 10);
+    return isNaN(result) ? null : result;
+}

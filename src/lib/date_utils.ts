@@ -1,25 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/**
- * Utility function that allows you to pass in "garbage", a hacky workaround to turn the function into a reactive one.
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function formatDateAndRelativeGarbage(date: Date, garbage: any) {
-    return formatDateAndRelative(date);
-}
+import { writable } from "svelte/store";
 
-export function formatDateAndRelative(date: Date): string {
+export function formatDateAndRelative(date: Date, _garbage?: any): string {
     const absolute = date.toLocaleDateString("de-DE", {second: undefined}) + " " + date.toLocaleTimeString("de-DE");
     const relative = relativeDate(date);
     return `${absolute} (${relative})`;
-}
-
-/**
- * Utility function that allows you to pass in "garbage", a hacky workaround to turn the function into a reactive one.
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function relativeDateGarbage(date: Date, garbage: any) {
-    return relativeDate(date);
 }
 
 /**
@@ -31,7 +17,7 @@ export function relativeDateGarbage(date: Date, garbage: any) {
  * "in 1 minute"
  * "1 minute and 30 seconds ago"
  */
-export function relativeDate(date: Date): string {
+export function relativeDate(date: Date, _garbage?: any): string {
     const diff = date.getTime() - Date.now();
 
     const directionFactor = diff < 0 ? -1 : 1;
@@ -48,7 +34,8 @@ export function relativeDate(date: Date): string {
     } else if (Math.abs(days) >= 1) {
         return relativeTimeFormatter.format(days, 'day');
     } else if (Math.abs(hours) >= 1) {
-        const prefix = directionFactor === -1 ? 'ago' : 'in';
+        const prefix = directionFactor === -1 ? '' : 'in ';
+        const suffix = directionFactor === -1 ? ' ago' : '';
         const remainingMinutes = Math.abs(minutes) % 60;
         const hoursFormatted = Intl.NumberFormat('en', {
             style: 'unit',
@@ -60,9 +47,10 @@ export function relativeDate(date: Date): string {
             unit: 'minute',
             unitDisplay: 'long'
         }).format(Math.abs(remainingMinutes)) : "";
-        return `${prefix} ${hoursFormatted}${minutesFormatted}`;
+        return `${prefix}${hoursFormatted}${minutesFormatted}${suffix}`;
     } else if (Math.abs(minutes) >= 1) {
-        const prefix = directionFactor === -1 ? 'ago' : 'in';
+        const prefix = directionFactor === -1 ? '' : 'in ';
+        const suffix = directionFactor === -1 ? ' ago' : '';
         const remainingSeconds = Math.abs(seconds) % 60;
         const minutesFormatted = Intl.NumberFormat('en', {
             style: 'unit',
@@ -74,8 +62,13 @@ export function relativeDate(date: Date): string {
             unit: 'second',
             unitDisplay: 'long'
         }).format(Math.abs(remainingSeconds)) : "";
-        return `${prefix} ${minutesFormatted}${secondsFormatted}`;
+        return `${prefix}${minutesFormatted}${secondsFormatted}${suffix}`;
     } else {
         return relativeTimeFormatter.format(seconds, 'second');
     }
 }
+
+export const time = writable(new Date());
+setInterval(() => {
+    time.set(new Date());
+}, 1000);

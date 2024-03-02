@@ -19,7 +19,7 @@
     import { clearContestCache, contestCache, loadContest, mayResolve } from "$lib/contest_cache";
     import EndNowButton from "./EndNowButton.svelte";
     import { isOngoing } from "$lib/contest_utils";
-    import { formatDateAndRelative } from "$lib/date_utils.js";
+    import { formatDateAndRelative, time } from "$lib/date_utils.js";
 
     const contestId = $page.params.contestId;
 
@@ -128,7 +128,7 @@
                 <p>Loading...</p>
             {:then contest}
                 <H1>{contest.name}</H1>
-                <p class="text-sm">ends {formatDateAndRelative(contest.deadline)}</p>
+                <p class="text-sm">ends {formatDateAndRelative(contest.deadline, $time)}</p>
                 <!-- will be replaced by RBAC later -->
                 <div class="gap-2 flex flex-col">
                     <p>{contest.description}</p>

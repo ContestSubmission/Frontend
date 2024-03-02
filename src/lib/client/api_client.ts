@@ -1,6 +1,7 @@
 import {
     Configuration,
     ContestResourceApi,
+    MetaResourceApi,
     ResponseError,
     SubmissionResourceApi,
     TeamInviteResourceApi,
@@ -17,12 +18,14 @@ export class Resources {
     private teamResource: TeamResourceApi;
     private inviteResource: TeamInviteResourceApi;
     private submissionResource: SubmissionResourceApi;
+    private meta: MetaResourceApi;
 
     constructor(config: Configuration) {
         this.contestResource = new ContestResourceApi(config);
         this.teamResource = new TeamResourceApi(config);
         this.inviteResource = new TeamInviteResourceApi(config);
         this.submissionResource = new SubmissionResourceApi(config);
+        this.meta = new MetaResourceApi(config);
     }
 
     static get contest() {
@@ -39,6 +42,10 @@ export class Resources {
 
     static get submission() {
         return Resources.instance.submissionResource;
+    }
+
+    static get meta() {
+        return Resources.instance.meta;
     }
 }
 

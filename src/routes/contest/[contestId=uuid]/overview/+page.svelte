@@ -16,41 +16,31 @@
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { Button } from "$lib/components/ui/button";
-    import { contestCache, loadContest, mayResolve } from "$lib/contest_cache";
+    import { clearContestCache, contestCache, loadContest, mayResolve } from "$lib/contest_cache";
+    import EndNowButton from "./EndNowButton.svelte";
+    import { isOngoing } from "$lib/contest_utils";
+    import { formatDateAndRelative } from "$lib/date_utils.js";
 
     const contestId = $page.params.contestId;
 
-/*
     let contestData: PersonalContestDTO | null;
-    let myTeam: Team | null = null;
-    const contest = Resources.contest.contestIdPersonalGet({ id: contestId })
-        .then(data => {
-            contestData = data;
-            myTeam = data.team ?? null;
-            if (data.submissions) {
-                // find by handedInAt
-                lastSubmission = data.submissions.reduce((prev, curr) => {
-                    if (prev == null) return curr;
-                    if (curr.handedInAt > prev.handedInAt) return curr;
-                    return prev;
-                }, null);
-            }
-            $contestCache[contestId] = data;
-            return data;
-        });
-*/
-    let contestData: PersonalContestDTO | null;
-    let contest: Promise<PersonalContestDTO> = (mayResolve($contestCache[contestId])
-            ?? loadContest(contestId, $contestCache))
-        .then(contest => {
-            contestData = contest;
-            lastSubmission = contest.submissions?.reduce((prev, curr) => {
-                if (prev == null) return curr;
-                if (curr.handedInAt > prev.handedInAt) return curr;
-                return prev;
-            }, null) ?? null;
-            return contest;
-        });
+
+    async function retrieveContest() {
+        clearContestCache(contestId);
+        let contest = await mayResolve($contestCache[contestId])
+            ?? await loadContest(contestId, $contestCache);
+
+        contestData = contest;
+        lastSubmission = contest.submissions?.reduce((prev, curr) => {
+            if (prev == null) return curr;
+            if (curr.handedInAt > prev.handedInAt) return curr;
+            return prev;
+        }, null) ?? null;
+
+        return contest;
+    }
+
+    let contestPromise: Promise<PersonalContestDTO> = retrieveContest();
 
     let state: "idle" | "uploading" | "submitting" | "success" | "error" = "idle";
     let file: File | null = null;
@@ -134,47 +124,54 @@
 <Page pageName="Contest overview">
     <FullPageCentered>
         <Container class="flex flex-col justify-between p-4">
-            {#await contest}
+            {#await contestPromise}
                 <p>Loading...</p>
             {:then contest}
                 <H1>{contest.name}</H1>
-                <p class="mb-5">{contest.description}</p>
+                <p class="text-sm">ends {formatDateAndRelative(contest.deadline)}</p>
                 <!-- will be replaced by RBAC later -->
-                {#if contest.publicGrading || contest.organizer.id === $page.data?.session?.user.id}
-                    <Button href="grade">View submissions</Button>
-                {/if}
-                {#if contest.team != null}
-                    <p class="pt-2">Your team: {contest.team.name}</p>
-                    <div class="pt-2 grid w-full max-w-sm items-center gap-1.5">
-                        <Form {options} {form} schema={formSchema} let:config enctype="multipart/form-data">
-                            <FormField {config} name="file">
-                                <FormItem>
-                                    <FormInput type="file" on:change={handleChange} />
-                                    <FormValidation class="mt-0 pt-0 text-red-500"/>
-                                </FormItem>
-                            </FormField>
-                            <FormButton class="mt-2" disabled={state === "uploading" || state === "submitting"}>
-                                Upload
-                            </FormButton>
-                        </Form>
-                        {#if state !== "idle"}
-                            <p class="text-center">
-                                {#if state === "uploading"}
-                                    Uploading...
-                                {:else if state === "submitting"}
-                                    Submitting...
-                                {:else if state === "success"}
-                                    Success! <A href={uploadedUrl}>View uploaded file</A>
-                                {:else if state === "error"}
-                                    Error!
+                <div class="gap-2 flex flex-col">
+                    <p>{contest.description}</p>
+                    {#if contest.publicGrading || contest.organizer.id === $page.data?.session?.user.id}
+                        <Button href="grade">View submissions</Button>
+                    {/if}
+                    {#if contest.team != null}
+                        <p class="pt-2">Your team: {contest.team.name}</p>
+                        <div class="pt-2 grid w-full max-w-sm items-center gap-1.5">
+                            {#if isOngoing(contest)}
+                                <Form {options} {form} schema={formSchema} let:config enctype="multipart/form-data">
+                                    <FormField {config} name="file">
+                                        <FormItem>
+                                            <FormInput type="file" on:change={handleChange} />
+                                            <FormValidation class="mt-0 pt-0 text-red-500"/>
+                                        </FormItem>
+                                    </FormField>
+                                    <FormButton class="mt-2" disabled={state === "uploading" || state === "submitting"}>
+                                        Upload
+                                    </FormButton>
+                                </Form>
+                                {#if state !== "idle"}
+                                    <p class="text-center">
+                                        {#if state === "uploading"}
+                                            Uploading...
+                                        {:else if state === "submitting"}
+                                            Submitting...
+                                        {:else if state === "success"}
+                                            Success! <A href={uploadedUrl}>View uploaded file</A>
+                                        {:else if state === "error"}
+                                            Error!
+                                        {/if}
+                                    </p>
                                 {/if}
-                            </p>
-                        {/if}
-                        {#if lastSubmission != null}
-                            <A class="p-2" href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
-                        {/if}
-                    </div>
-                {/if}
+                            {/if}
+                            {#if lastSubmission != null}
+                                <A href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
+                            {/if}
+                        </div>
+                    {:else if contest.organizer.id === $page.data?.session?.user.id && isOngoing(contest)}
+                        <EndNowButton contestId={contest.id} on:ended={() => contestPromise = retrieveContest()}/>
+                    {/if}
+                </div>
             {:catch error}
                 <p>{error.message}</p>
             {/await}

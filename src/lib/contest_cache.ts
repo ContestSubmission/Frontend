@@ -15,6 +15,19 @@ export async function loadContest(contestId: uuid, contestCache: Record<uuid, Pe
     return data;
 }
 
+export function clearContestCache(contestId?: uuid) {
+    if (contestId) {
+        contestCache.update(cache => {
+            delete cache[contestId];
+            console.debug("Cleared contest cache for contest", contestId);
+            return cache;
+        })
+    } else {
+        contestCache.set({});
+        console.debug("Cleared contest cache");
+    }
+}
+
 export function mayResolve<T>(obj: T | null | undefined): Promise<T> | null {
     if (obj === null || obj === undefined) {
         return null;

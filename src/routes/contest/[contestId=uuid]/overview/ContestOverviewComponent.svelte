@@ -37,12 +37,12 @@
     {/if}
     {#if contest.team != null}
         <Tabs>
-            <TabsList>
+            <TabsList class="w-full">
                 {#if teamPageShown}
-                    <TabsTrigger value="team">Team management</TabsTrigger>
+                    <TabsTrigger value="team" class="w-full data-[state=active]:bg-accent">Team management</TabsTrigger>
                 {/if}
                 {#if uploadShown}
-                    <TabsTrigger value="upload">Upload</TabsTrigger>
+                    <TabsTrigger value="upload" class="w-full data-[state=active]:bg-accent">Upload</TabsTrigger>
                 {/if}
             </TabsList>
             <TabsContent value="team">

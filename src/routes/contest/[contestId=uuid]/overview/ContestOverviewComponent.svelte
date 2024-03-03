@@ -35,34 +35,36 @@
     {#if contest.organizer.id === $page.data?.session?.user.id && isOngoing(contest)}
         <EndNowButton contestId={contest.id} on:ended/>
     {/if}
-    <Tabs>
-        <TabsList>
-            {#if teamPageShown}
-                <TabsTrigger value="team">Team management</TabsTrigger>
-            {/if}
-            {#if uploadShown}
-                <TabsTrigger value="upload">Upload</TabsTrigger>
-            {/if}
-        </TabsList>
-        <TabsContent value="team">
-            {#if teamPageShown}
-                <div class="flex flex-col gap-2">
-                    <p>Your team: {contest.team.name}</p>
-                    {#if contest.team.owner.id === $page.data?.session?.user.id}
-                        <InviteComponent {contest}/>
+    {#if contest.team != null}
+        <Tabs>
+            <TabsList>
+                {#if teamPageShown}
+                    <TabsTrigger value="team">Team management</TabsTrigger>
+                {/if}
+                {#if uploadShown}
+                    <TabsTrigger value="upload">Upload</TabsTrigger>
+                {/if}
+            </TabsList>
+            <TabsContent value="team">
+                {#if teamPageShown}
+                    <div class="flex flex-col gap-2">
+                        <p>Your team: {contest.team.name}</p>
+                        {#if contest.team.owner.id === $page.data?.session?.user.id}
+                            <InviteComponent {contest}/>
+                        {/if}
+                    </div>
+                {/if}
+            </TabsContent>
+            <TabsContent value="upload">
+                <div class="pt-2 grid w-full items-center gap-1.5">
+                    {#if isOngoing(contest)}
+                        <UploadComponent {contest} bind:lastSubmission form={uploadForm}/>
+                    {/if}
+                    {#if lastSubmission != null}
+                        <A href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
                     {/if}
                 </div>
-            {/if}
-        </TabsContent>
-        <TabsContent value="upload">
-            <div class="pt-2 grid w-full items-center gap-1.5">
-                {#if isOngoing(contest)}
-                    <UploadComponent {contest} bind:lastSubmission form={uploadForm}/>
-                {/if}
-                {#if lastSubmission != null}
-                    <A href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
-                {/if}
-            </div>
-        </TabsContent>
-    </Tabs>
+            </TabsContent>
+        </Tabs>
+    {/if}
 </div>

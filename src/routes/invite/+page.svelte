@@ -11,6 +11,7 @@
     import { streamToString } from "$lib/javascript_utils";
     import { jwtDecode } from "jwt-decode";
     import type { InviteJWT } from "$lib/client/invite";
+    import { execSilently } from "$lib/svelte_utils";
 
     let passedJwt = $page.data.jwt;
     let jwt: InviteJWT = jwtDecode(passedJwt);
@@ -45,7 +46,7 @@
                 <div transition:fade>
                     <p>Invite accepted!</p>
                     <p>Redirecting to contest...</p>
-                    {window.location.href = `/contest/${jwt.contestId}/overview?fromInvite=true`}
+                    {execSilently(window.location.href = `/contest/${jwt.contestId}/overview?fromInvite=true`)}
                     <p><i>If this doesn't work, click <a class="underline" href="/contest/{jwt.contestId}/overview?fromInvite=true">here</a></i>
                     </p>
                 </div>

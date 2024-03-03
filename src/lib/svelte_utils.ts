@@ -39,3 +39,17 @@ export function setCookie(name: string, value: string, exdays: number, secure: b
 export function deleteCookie(name: string) {
     document.cookie = name+'=; Max-Age=-99999999;';
 }
+
+/**
+ * Utility function to allow for silent execution of a command.
+ * @param arg - Either a function to execute or some ignored garbage
+ * @param _args - Ignored garbage
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function execSilently(arg: any | (() => (never)), ..._args: never[]) { // NOSONAR
+    if (typeof arg === "function") {
+        arg();
+    }
+
+    return "";
+}

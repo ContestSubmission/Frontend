@@ -45,12 +45,14 @@
             {/if}
         </TabsList>
         <TabsContent value="team">
-            <div class="flex flex-col gap-2">
-                <p>Your team: {contest.team.name}</p>
-                {#if contest.team.owner.id === $page.data?.session?.user.id}
-                    <InviteComponent {contest}/>
-                {/if}
-            </div>
+            {#if teamPageShown}
+                <div class="flex flex-col gap-2">
+                    <p>Your team: {contest.team.name}</p>
+                    {#if contest.team.owner.id === $page.data?.session?.user.id}
+                        <InviteComponent {contest}/>
+                    {/if}
+                </div>
+            {/if}
         </TabsContent>
         <TabsContent value="upload">
             <div class="pt-2 grid w-full items-center gap-1.5">

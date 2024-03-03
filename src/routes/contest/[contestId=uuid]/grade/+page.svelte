@@ -36,11 +36,11 @@
         {#await contest}
             <p>Loading...</p>
         {:then contest}
+            <H2 class="m-0 p-0 leading-6">Grade submissions for {contest.name}</H2>
             {#await toGrade}
                 <p>Loading...</p>
             {:then toGrade}
                 <div class="mb-4">
-                    <H2 class="m-0 p-0 leading-6">Grade submissions for {contest.name}</H2>
                     {#if isOngoing(contest)}
                         <div class="w-full flex justify-center text-orange-400">
                             <AlertTriangle/>

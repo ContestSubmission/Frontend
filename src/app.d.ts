@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import type { MySession } from "./routes/+layout.server";
+
+import type { MySession } from "$lib/auth";
 
 declare global {
 	namespace App {

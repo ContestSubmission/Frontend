@@ -5,14 +5,12 @@
     import {
         DropdownMenu,
         DropdownMenuContent,
-        DropdownMenuGroup,
         DropdownMenuItem,
-        DropdownMenuLabel,
         DropdownMenuSeparator,
         DropdownMenuTrigger
     } from "$lib/components/ui/dropdown-menu";
     import ScalePopup from "$lib/components/ScalePopup.svelte";
-    import colors from "tailwindcss/colors";
+    import { page } from "$app/stores";
 
     export let avatar = "";
     export let initials = "";
@@ -31,6 +29,9 @@
         <DropdownMenuContent>
             <DropdownMenuItem on:click={() => scaleDialogOpen = true}>Change scale</DropdownMenuItem>
             <DropdownMenuSeparator/>
+            {#if $page.data.session?.user != null}
+                <DropdownMenuItem href="/profile">Profile</DropdownMenuItem>
+            {/if}
             <DropdownMenuItem on:click={() => signOut()}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>

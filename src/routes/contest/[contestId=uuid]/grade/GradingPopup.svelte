@@ -10,6 +10,7 @@
     import { createEventDispatcher, onMount } from "svelte";
     import { zodClient } from "sveltekit-superforms/adapters";
     import { Input } from "$lib/components/ui/input";
+    import { parseInteger } from "$lib/javascript_utils";
 
     export let grading: GradeTeamOverviewDTO;
 
@@ -51,15 +52,16 @@
         onUpdate: handleSubmit
     })
 
-    const {form: formData, enhance} = form;
+    const { form: formData, enhance, allErrors } = form;
 
     let state: "idle" | "submitting" = "idle";
 
     // these fields are required to initialize the form on open
     let commentField = $formData.comment;
     $: $formData.comment = commentField;
-    let gradeField: number = $formData.grade;
-    $: $formData.grade = Number(gradeField);
+    // `as never` to make the compiler STFU about the type shit
+    let gradeField: string = $formData.grade as never as string;
+    $: $formData.grade = parseInteger(gradeField) ?? "<invalid>" as never;
 </script>
 
 <DialogContent>
@@ -67,7 +69,7 @@
         <DialogTitle>Grade {grading.team.name}'s submission</DialogTitle>
         <DialogDescription>
             <form method="post" use:enhance class="space-y-4">
-                <FormField {form} name="grade" class="space-y-0">
+                <FormField {form} name="grade">
                     <FormControl let:attrs>
                         <FormLabel>Score</FormLabel>
                         <Input type="number" min="0" max="100" {...attrs} bind:value={gradeField}/>
@@ -83,7 +85,7 @@
                     <FormFieldErrors/>
                 </FormField>
                 <div class="mt-2 flex flex-row gap-2 items-center">
-                    <FormButton disabled={state === "submitting"}>
+                    <FormButton disabled={state === "submitting" || $allErrors.length > 0}>
                         Submit
                     </FormButton>
                     {#if state === "submitting"}

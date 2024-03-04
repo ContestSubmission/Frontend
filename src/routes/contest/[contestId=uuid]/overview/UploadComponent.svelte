@@ -73,17 +73,23 @@
         onSubmit: handleSubmit
     });
 
-    const { form: formData, enhance } = form;
+    const { form: formData, enhance, allErrors } = form;
+
+
+    function updateSelectedFile(e: InputEvent) {
+        ($formData.file as never as File | null) = (e.currentTarget! as HTMLInputElement).files?.item(0) ?? null;
+    }
 </script>
 
-<form use:enhance enctype="multipart/form-data" class="flex flex-row w-full gap-2">
-    <FormField {form} name="file" class="w-full">
+<form method="post" use:enhance enctype="multipart/form-data" class="flex flex-row w-full gap-2">
+    <FormField {form} name="file" class="w-full text-left">
         <FormControl let:attrs>
-            <Input {...attrs} bind:value={$formData.file} type="file" on:change={handleChange}/>
+            <Input {...attrs} on:input={updateSelectedFile} type="file" on:change={handleChange}/>
         </FormControl>
-        <FormFieldErrors/>
+        <FormFieldErrors class="text-left"/>
     </FormField>
-    <FormButton disabled={state === "uploading" || state === "submitting"}>
+    <FormButton
+        disabled={state === "uploading" || state === "submitting" || $allErrors.length > 0 || $formData.file == null}>
         Upload
     </FormButton>
 </form>

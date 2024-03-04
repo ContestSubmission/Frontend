@@ -4,14 +4,13 @@
     import type { PersonalContestDTO, Submission } from "@contestsubmission/api-client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
-    import type { SuperValidated } from "sveltekit-superforms";
-    import { type FormSchema } from "./upload-schema";
     import { toast } from "svelte-sonner";
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { clearContestCache, contestCache, loadContest, mayResolve } from "$lib/contest_cache";
     import ContestOverviewComponent from "./ContestOverviewComponent.svelte";
+    import type { PageData } from "./$types";
 
     const contestId = $page.params.contestId;
 
@@ -47,11 +46,11 @@
             // this is done to prevent the toast from showing again if the user refreshes the page
             let query = new URLSearchParams($page.url.searchParams.toString());
             query.delete("fromInvite");
-            goto("?" + query.toString(), { replaceState: true });
+            goto("?" + query.toString(), {replaceState: true});
         }
     });
 
-    export let form: SuperValidated<FormSchema>;
+    export let data: PageData;
 </script>
 
 <Page pageName="Contest overview">
@@ -60,7 +59,7 @@
             {#await contestPromise}
                 <p>Loading...</p>
             {:then contest}
-                <ContestOverviewComponent {contest} {lastSubmission} uploadForm={form}/>
+                <ContestOverviewComponent {contest} {lastSubmission} uploadForm={data.form}/>
             {:catch error}
                 <p>{error.message}</p>
             {/await}

@@ -4,7 +4,7 @@
     import Container from "$lib/components/ui/container/Container.svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { Resources } from "$lib/client/api_client";
-    import { AlertTriangle } from "lucide-svelte";
+    import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import Page from "$lib/components/Page.svelte";
 
     let clientVersion: SemVer = semver.parse(rootPackage.dependencies["@contestsubmission/api-client"])!

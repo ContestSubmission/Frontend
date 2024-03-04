@@ -1,22 +1,40 @@
 <script lang="ts">
-    import * as Form from "$lib/components/ui/form";
     import { formSchema, type FormSchema } from "./schema";
-    import type { SuperValidated } from "sveltekit-superforms";
-    import { Search } from "lucide-svelte";
+    import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
+    import Search from "lucide-svelte/icons/search";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    import { Input } from "$lib/components/ui/input";
+    import { FormButton, FormControl, FormField } from "$lib/components/ui/form";
+    import { cn } from "$lib/utils";
 
-    export let form: SuperValidated<FormSchema>;
+    export let data: SuperValidated<Infer<FormSchema>>;
+
+    const form = superForm(data, {
+        validators: zodClient(formSchema)
+    });
+
+    const {form: formData} = form;
+
+    export let defaultValue: string | undefined | null = null;
+    $: if (defaultValue) $formData.term = defaultValue;
+
+    let classes: string = "";
+    export { classes as class };
 </script>
-<Form.Root asChild let:attrs {form} schema={formSchema} let:config>
-    <form {...attrs} method="get" action="/search/results" class="flex flex-col justify-center w-80">
-        <Form.Field {config} name="term">
-            <Form.Item>
-                <Form.Input class="bg-secondary text-primary-foreground" placeholder="Search term"/>
-                <Form.Validation class="mt-0 pt-0 text-red-500"/>
-            </Form.Item>
-        </Form.Field>
-        <Form.Button class="mt-2">
-            <Search class="p-1 mr-1"/>
-            Search
-        </Form.Button>
-    </form>
-</Form.Root>
+
+<form method="get" action="/search/results" class={cn("flex gap-2 flex-row justify-center items-start w-80", classes)}>
+    <FormField {form} name="term">
+        <FormControl let:attrs>
+            <Input
+                    class="text-primary-foreground bg-background"
+                    placeholder="Search term"
+                    {...attrs}
+                    bind:value={$formData.term}
+            />
+        </FormControl>
+    </FormField>
+    <FormButton>
+        <Search class="p-1 mr-1"/>
+        Search
+    </FormButton>
+</form>

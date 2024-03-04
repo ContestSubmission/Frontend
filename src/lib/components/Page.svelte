@@ -1,11 +1,14 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
     import { page } from "$app/stores";
-    import { Home, Medal, Plus, Search } from "lucide-svelte";
+    import Home from "lucide-svelte/icons/home";
+    import Medal from "lucide-svelte/icons/medal";
+    import Plus from "lucide-svelte/icons/plus";
+    import Search from "lucide-svelte/icons/search";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { buttonNameBuilder, linkStyles } from "$lib/svelte_utils";
     import { PUBLIC_EXTRA_SCRIPT_URL as EXTRA_SCRIPT_URL } from "$env/static/public";
-    import { signIn, signOut } from "@auth/sveltekit/client";
+    import { signIn } from "@auth/sveltekit/client";
     import UserDropdown from "$lib/components/UserDropdown.svelte";
 
     let user = $page.data.session?.user;
@@ -19,7 +22,8 @@
         ?? $page.data.session?.user?.name?.split(" ").map((name) => name[0]).join("") ?? "??")
         .substring(0, 2);
 
-    export let pageName: string | null;
+    export let pageName: string;
+    export let showPageName: boolean = true;
 
     let classes = "";
     export { classes as class };
@@ -53,10 +57,10 @@
             <Button variant="secondary" class="w-10 h-10 p-2" href="/" builders={[buttonNameBuilder("Homepage")]}>
                 <Home/>
             </Button>
-            <slot name="navbar-left"/>
-            {#if pageName}
-                <H2>{pageName}</H2>
-            {/if}
+        {/if}
+        <slot name="navbar-left"/>
+        {#if showPageName}
+            <H2>{pageName}</H2>
         {/if}
     </div>
     <div class="buttons">

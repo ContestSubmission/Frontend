@@ -10,12 +10,12 @@
     import A from "$lib/components/utils/typography/A.svelte";
     import { type PersonalContestDTO, type Submission } from "@contestsubmission/api-client";
     import UploadComponent from "./UploadComponent.svelte";
-    import type { SuperValidated } from "sveltekit-superforms";
+    import type { Infer, SuperValidated } from "sveltekit-superforms";
     import { Tabs, TabsContent, TabsList, TabsTrigger } from "$lib/components/ui/tabs";
 
     export let contest: PersonalContestDTO;
 
-    export let uploadForm: SuperValidated<FormSchema>
+    export let uploadForm: SuperValidated<Infer<FormSchema>>
 
     export let lastSubmission: Submission | null;
 
@@ -58,9 +58,9 @@
             <TabsContent value="upload">
                 <div class="pt-2 grid w-full items-center gap-1.5">
                     {#if isOngoing(contest)}
-                        <UploadComponent {contest} bind:lastSubmission form={uploadForm}/>
+                        <UploadComponent {contest} bind:lastSubmission data={uploadForm}/>
                     {/if}
-                    {#if lastSubmission != null}
+                    {#if lastSubmission != null && lastSubmission.url}
                         <A href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
                     {/if}
                 </div>

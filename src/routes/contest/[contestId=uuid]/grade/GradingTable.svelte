@@ -5,10 +5,12 @@
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$lib/components/ui/table";
     import A from "$lib/components/utils/typography/A.svelte";
     import { addSortBy } from "svelte-headless-table/plugins";
-    import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-svelte";
+    import ArrowDown from "lucide-svelte/icons/arrow-down";
+    import ArrowUp from "lucide-svelte/icons/arrow-up";
+    import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
     import { Button } from "$lib/components/ui/button";
     import GradingDropDown from "./GradingDropDown.svelte";
-    import type { SuperValidated } from "sveltekit-superforms";
+    import type { Infer, SuperValidated } from "sveltekit-superforms";
     import type { FormSchema } from "./schema";
     import P from "$lib/components/utils/typography/P.svelte";
     import { isOngoing } from "$lib/contest_utils";
@@ -30,7 +32,7 @@
         }),
     });
 
-    export let form: SuperValidated<FormSchema>;
+    export let gradingForm: SuperValidated<Infer<FormSchema>>;
 
     const columns = table.createColumns([
         table.column({
@@ -56,7 +58,7 @@
         }),
         table.column({
             header: "",
-            accessor: (grading) => ({ grading, contest, form }),
+            accessor: (grading) => ({ grading, contest, gradingForm }),
             cell: ({ value }) => {
                 return createRender(GradingDropDown, value)
                     .on("update", async (_) => {

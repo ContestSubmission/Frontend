@@ -1,6 +1,6 @@
 <script lang="ts">
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
-    import SearchForm from "./SearchForm.svelte";
+    import SearchForm from "../SearchForm.svelte";
     import type { PageData } from "./$types";
     import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
@@ -11,7 +11,7 @@
     export let data: PageData;
 </script>
 
-<Page pageName={null}>
+<Page pageName="Search results" showPageName={false}>
     <!-- negative z-index to allow clicks to navbar -->
     {#await data.streamed.results}
         <FullPageCentered>
@@ -34,6 +34,6 @@
     {/await}
 
     <svelte:fragment slot="navbar-left">
-        <SearchForm form={data.form} defaultValue={$page.url.searchParams.get("term")}/>
+        <SearchForm data={data.form} defaultValue={$page.url.searchParams.get("term")}/>
     </svelte:fragment>
 </Page>

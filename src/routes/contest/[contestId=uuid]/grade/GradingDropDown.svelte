@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
-    import { MoreHorizontal } from "lucide-svelte";
+    import MoreHorizontal from "lucide-svelte/icons/more-horizontal";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { isOngoing } from "$lib/contest_utils";
     import {
@@ -14,12 +14,12 @@
     } from "$lib/components/ui/dropdown-menu";
     import { Dialog, DialogTrigger } from "$lib/components/ui/dialog";
     import GradingPopup from "./GradingPopup.svelte";
-    import type { SuperValidated } from "sveltekit-superforms";
+    import type { Infer, SuperValidated } from "sveltekit-superforms";
     import type { FormSchema } from "./schema";
 
     export let contest: PersonalContestDTO;
     export let grading: GradeTeamOverviewDTO;
-    export let form: SuperValidated<FormSchema>;
+    export let gradingForm: SuperValidated<Infer<FormSchema>>;
 
     let submissionId: number | null = grading.submission?.id ?? null;
 
@@ -64,5 +64,5 @@
             </DropdownMenuGroup>
         </DropdownMenuContent>
     </DropdownMenu>
-    <GradingPopup contestId={contest.id} {grading} bind:open={gradeDialogOpen} {form} on:update/>
+    <GradingPopup contestId={contest.id} {grading} bind:open={gradeDialogOpen} data={gradingForm} on:update/>
 </Dialog>

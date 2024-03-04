@@ -1,12 +1,13 @@
 <script lang="ts">
     import type { FormSchema } from "./upload-schema.js";
     import { formSchema } from "./upload-schema.js";
-    import { Form, FormButton, FormField, FormInput, FormItem, FormValidation } from "$lib/components/ui/form/index.js";
+    import { FormButton, FormControl, FormField, FormFieldErrors } from "$lib/components/ui/form/index.js";
     import A from "$lib/components/utils/typography/A.svelte";
     import type { PersonalContestDTO, PreSignedPost, Submission } from "@contestsubmission/api-client";
     import { Resources, responseErrorHandler } from "$lib/client/api_client.js";
-    import type { SuperValidated } from "sveltekit-superforms";
-    import type { FormOptions } from "formsnap";
+    import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    import { Input } from "$lib/components/ui/input";
 
     let state: "idle" | "uploading" | "submitting" | "success" | "error" = "idle";
     let file: File | null = null;
@@ -64,31 +65,36 @@
         lastSubmission = submission;
     }
 
-    export let form: SuperValidated<FormSchema>;
+    export let data: SuperValidated<Infer<FormSchema>>;
 
-    const options: FormOptions<typeof formSchema> = {
+    const form = superForm(data, {
+        SPA: true,
+        validators: zodClient(formSchema),
         onSubmit: handleSubmit
-    }
+    });
+
+    const { form: formData, enhance } = form;
 </script>
 
-<Form {options} {form} schema={formSchema} let:config enctype="multipart/form-data" class="flex flex-row w-full gap-2">
-    <FormField {config} name="file">
-        <FormItem class="w-full">
-            <FormInput type="file" on:change={handleChange}/>
-            <FormValidation class="mt-0 pt-0 text-red-500"/>
-        </FormItem>
+<form use:enhance enctype="multipart/form-data" class="flex flex-row w-full gap-2">
+    <FormField {form} name="file" class="w-full">
+        <FormControl let:attrs>
+            <Input {...attrs} bind:value={$formData.file} type="file" on:change={handleChange}/>
+        </FormControl>
+        <FormFieldErrors/>
     </FormField>
     <FormButton disabled={state === "uploading" || state === "submitting"}>
         Upload
     </FormButton>
-</Form>
+</form>
+
 {#if state !== "idle"}
     <p class="text-center">
         {#if state === "uploading"}
             Uploading...
         {:else if state === "submitting"}
             Submitting...
-        {:else if state === "success"}
+        {:else if state === "success" && uploadedUrl}
             Success! <A href={uploadedUrl}>View uploaded file</A>
         {:else if state === "error"}
             Error!

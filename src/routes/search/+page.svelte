@@ -12,6 +12,6 @@
     <!-- negative z-index to allow clicks to navbar -->
     <FullPageCentered class="flex justify-center gap-3 -z-10">
         <H1>Find your next Contest</H1>
-        <SearchForm form="{data.form}"/>
+        <SearchForm data="{data.form}" class="flex-col children:w-full"/>
     </FullPageCentered>
 </Page>

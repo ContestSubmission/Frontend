@@ -30,7 +30,7 @@
                 <img src={user.image} alt="Profile picture of {user.displayName}"/>
                 <div>
                     <H2>{user.name}</H2>
-                    <SuperDebug data={user}/>
+                    <SuperDebug data={user} stringTruncate={50}/>
                 </div>
             {:else}
                 <p>Loading...</p>

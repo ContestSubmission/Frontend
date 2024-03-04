@@ -2,7 +2,8 @@
     import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
-    import { AlertTriangle, ArrowLeft } from "lucide-svelte";
+    import AlertTriangle from "lucide-svelte/icons/alert-triangle";
+    import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import { browser } from "$app/environment";
     import { signIn } from "@auth/sveltekit/client";
     import IconButton from "$lib/components/utils/IconButton.svelte";
@@ -49,7 +50,7 @@
                     {/if}
                 </div>
 
-                <GradingTable data={toGrade} {contest} form={data.form} />
+                <GradingTable data={toGrade} {contest} gradingForm={data.form} />
             {/await}
         {:catch error}
             <p>{error.message}</p>

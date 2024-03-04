@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
-    import { Plus, Search } from "lucide-svelte";
+    import Plus from "lucide-svelte/icons/plus";
+    import Search from "lucide-svelte/icons/search";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
@@ -22,7 +23,7 @@
     </style>
 </svelte:head>
 
-<Page pageName="Home">
+<Page pageName="Home" showPageName={false}>
     <!-- negative z-index to allow clicks to navbar -->
     <FullPageCentered class="homepage flex justify-center gap-3 -z-10">
         <Container id="header-box" class="card px-14 py-8 backdrop-blur-lg">

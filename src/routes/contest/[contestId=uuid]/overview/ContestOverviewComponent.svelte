@@ -26,9 +26,10 @@
 
 <H1>{contest.name}</H1>
 <p class="text-sm">ends {formatDateAndRelative(contest.deadline, $time)}</p>
-<!-- will be replaced by RBAC later -->
-<div class="gap-4 flex flex-col">
-    <p>{contest.description}</p>
+{#if contest.description}
+    <p class="p-0 m-0">{contest.description}</p>
+{/if}
+<div class="gap-2 flex flex-col mt-4">
     {#if contest.publicGrading || contest.organizer.id === $page.data?.session?.user.id}
         <Button href="grade">View submissions</Button>
     {/if}

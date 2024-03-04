@@ -35,7 +35,7 @@
                 <Search class="mr-2 h-4 w-4"/>
                 Search a Contest
             </Button>
-            <Button variant="secondary">
+            <Button variant="secondary" href="/contest/create">
                 <Plus class="mr-2 h-4 w-4"/>
                 Create a Contest
             </Button>

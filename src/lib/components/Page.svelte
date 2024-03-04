@@ -68,7 +68,7 @@
             <Search class="mr-2 h-4 w-4"/>
             Search
         </Button>
-        <Button variant="secondary" href="?">
+        <Button variant="secondary" class={linkStyles("contest/create", $page)} href="/contest/create">
             <Plus class="mr-2 h-4 w-4"/>
             Create
         </Button>

@@ -4,8 +4,6 @@
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
-    import { browser } from "$app/environment";
-    import { signIn } from "@auth/sveltekit/client";
     import IconButton from "$lib/components/utils/IconButton.svelte";
     import { contestCache, loadContest } from "$lib/contest_cache";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
@@ -15,10 +13,9 @@
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { isOngoing } from "$lib/contest_utils.js";
     import type { PageData } from "./$types";
+    import { ensureLoggedIn } from "$lib/auth";
 
-    if (browser && !$page.data.session) {
-        signIn("oidc");
-    }
+    ensureLoggedIn($page)
 
     const contestId = $page.params.contestId;
 

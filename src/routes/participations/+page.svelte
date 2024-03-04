@@ -6,14 +6,14 @@
     import colors from "tailwindcss/colors";
     import ContestCollection from "$lib/components/contest/ContestCollection.svelte";
     import { page } from "$app/stores";
-    import type { ParticipatedContestDTO } from "@contestsubmission/api-client/models/ParticipatedContestDTO";
+    import { ensureLoggedIn } from "$lib/auth";
 
-    let data: Promise<ParticipatedContestDTO[]> = Resources.contest.contestMyGet()
+    ensureLoggedIn($page);
 </script>
 
 <Page pageName="Participations">
     {#if $page.data.session}
-        {#await data}
+        {#await Resources.contest.contestMyGet()}
             <FullPageCentered>
                 <Stretch color={colors.slate['100']}/>
             </FullPageCentered>
@@ -34,7 +34,7 @@
         {/await}
     {:else}
         <FullPageCentered>
-            <p>You need to be logged in to see this page</p>
+            <Stretch color={colors.slate['100']}/>
         </FullPageCentered>
     {/if}
 </Page>

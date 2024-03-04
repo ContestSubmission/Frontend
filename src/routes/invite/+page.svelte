@@ -4,21 +4,18 @@
     import { page } from "$app/stores";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import { Resources } from "$lib/client/api_client";
-    import { signIn } from "@auth/sveltekit/client";
-    import { browser } from "$app/environment";
     import { Stretch } from "svelte-loading-spinners";
     import colors from "tailwindcss/colors";
     import { streamToString } from "$lib/javascript_utils";
     import { jwtDecode } from "jwt-decode";
     import type { InviteJWT } from "$lib/client/invite";
     import { execSilently } from "$lib/svelte_utils";
+    import { ensureLoggedIn } from "$lib/auth";
 
     let passedJwt = $page.data.jwt;
     let jwt: InviteJWT = jwtDecode(passedJwt);
 
-    if (browser && !$page.data.session) {
-        signIn("oidc");
-    }
+    ensureLoggedIn($page)
 </script>
 
 <style>

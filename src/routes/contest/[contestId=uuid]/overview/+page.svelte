@@ -8,20 +8,18 @@
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
-    import { clearContestCache, contestCache, loadContest, mayResolve } from "$lib/contest_cache";
     import ContestOverviewComponent from "./ContestOverviewComponent.svelte";
     import type { PageData } from "./$types";
+    import { Resources } from "$lib/client/api_client";
 
     const contestId = $page.params.contestId;
 
     let lastSubmission: Submission | null;
 
     async function retrieveContest() {
-        clearContestCache(contestId);
-        let contest = await mayResolve($contestCache[contestId])
-            ?? await loadContest(contestId, $contestCache);
+        let contest = await Resources.contest.contestIdPersonalGet({ id: contestId });
 
-        lastSubmission = contest.submissions?.reduce((prev, curr) => {
+        lastSubmission = contest.submissions?.reduce((prev: Submission | null, curr: Submission) => {
             if (prev == null) return curr;
             if (curr.handedInAt > prev.handedInAt) return curr;
             return prev;

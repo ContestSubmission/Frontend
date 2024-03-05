@@ -5,11 +5,9 @@
     import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import IconButton from "$lib/components/utils/icon-button/IconButton.svelte";
-    import { contestCache, loadContest } from "$lib/contest_cache";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { Resources } from "$lib/client/api_client";
     import GradingTable from "./GradingTable.svelte";
-    import { mayResolve } from "$lib/contest_cache.js";
     import H2 from "$lib/components/utils/typography/H2.svelte";
     import { isOngoing } from "$lib/contest_utils.js";
     import type { PageData } from "./$types";
@@ -19,9 +17,8 @@
 
     const contestId = $page.params.contestId;
 
-    let contest: Promise<PersonalContestDTO> = mayResolve($contestCache[contestId])
-        ?? loadContest(contestId, $contestCache);
-    let toGrade: Promise<GradeTeamOverviewDTO[]> = Resources.grade.contestContestIdGradeListGet({contestId});
+    let contest: Promise<PersonalContestDTO> = Resources.contest.contestIdPersonalGet({ id: contestId });
+    let toGrade: Promise<GradeTeamOverviewDTO[]> = Resources.grade.contestContestIdGradeListGet({ contestId });
 
     export let data: PageData;
 </script>
@@ -49,7 +46,7 @@
                     {/if}
                 </div>
 
-                <GradingTable data={toGrade} {contest} gradingForm={data.form} />
+                <GradingTable data={toGrade} {contest} gradingForm={data.form}/>
             {/await}
         {:catch error}
             <p>{error.message}</p>

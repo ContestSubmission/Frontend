@@ -41,7 +41,7 @@
 	"dependencies": {
 		"@auth/core": "^0.28.0",
 		"@auth/sveltekit": "^0.14.0",
-		"@contestsubmission/api-client": "3.3.2",
+		"@contestsubmission/api-client": "3.4.0-SNAPSHOT.172",
 		"@internationalized/date": "^3.5.2",
 		"bits-ui": "^0.18.6",
 		"clsx": "^2.1.0",

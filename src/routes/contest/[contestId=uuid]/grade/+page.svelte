@@ -4,7 +4,7 @@
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
-    import IconButton from "$lib/components/utils/IconButton.svelte";
+    import IconButton from "$lib/components/utils/icon-button/IconButton.svelte";
     import { contestCache, loadContest } from "$lib/contest_cache";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { Resources } from "$lib/client/api_client";
@@ -27,9 +27,11 @@
 </script>
 
 <Page pageName="Grade submissions">
-    <IconButton slot="navbar-left" href="overview">
-        <ArrowLeft />
-    </IconButton>
+    <div slot="navbar-left">
+        <IconButton buttonName="Back to overview" href="overview" let:classes>
+            <ArrowLeft class={classes}/>
+        </IconButton>
+    </div>
     <FullPageCentered>
         {#await contest}
             <p>Loading...</p>
@@ -40,7 +42,7 @@
             {:then toGrade}
                 <div class="mb-4">
                     {#if isOngoing(contest)}
-                        <div class="w-full flex justify-center text-orange-400">
+                        <div class="w-full flex justify-center items-center text-orange-400">
                             <AlertTriangle/>
                             <p class="ml-2">Contest is still running, you can't grade yet</p>
                         </div>

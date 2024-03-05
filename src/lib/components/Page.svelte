@@ -6,10 +6,11 @@
     import Plus from "lucide-svelte/icons/plus";
     import Search from "lucide-svelte/icons/search";
     import H2 from "$lib/components/utils/typography/H2.svelte";
-    import { buttonNameBuilder, linkStyles } from "$lib/svelte_utils";
+    import { linkStyles } from "$lib/svelte_utils";
     import { PUBLIC_EXTRA_SCRIPT_URL as EXTRA_SCRIPT_URL } from "$env/static/public";
     import { signIn } from "@auth/sveltekit/client";
     import UserDropdown from "$lib/components/UserDropdown.svelte";
+    import IconButton from "$lib/components/utils/icon-button/IconButton.svelte";
 
     let user = $page.data.session?.user;
     let avatar = user?.image;
@@ -54,9 +55,9 @@
 <div class="navbar z-80">
     <div class="home">
         {#if $page.route.id !== "/"}
-            <Button variant="secondary" class="w-10 h-10 p-2" href="/" builders={[buttonNameBuilder("Homepage")]}>
-                <Home/>
-            </Button>
+            <IconButton href="/" buttonName="Homepage" let:classes>
+                <Home class={classes}/>
+            </IconButton>
         {/if}
         <slot name="navbar-left"/>
         {#if showPageName}

@@ -18,6 +18,10 @@
     import { Input } from "$lib/components/ui/input";
     import DateTimePicker from "$lib/components/ui/date-time-picker/DateTimePicker.svelte";
     import { Checkbox } from "$lib/components/ui/checkbox";
+    import { ensureLoggedIn } from "$lib/auth";
+    import { page } from "$app/stores";
+
+    ensureLoggedIn($page)
 
     export let data: PageData;
 
@@ -25,10 +29,15 @@
         validators: zodClient(formSchema)
     });
 
-    const { form: formData, enhance, validateForm } = form;
+    const { form: formData, enhance, validateForm, validate } = form;
 
     let validation: SuperValidated<Infer<FormSchema>>;
-    formData.subscribe((_) => validateForm().then((v) => validation = v));
+    formData.subscribe(async (_) => validation = await validateForm());
+
+    // workaround to fix errors not appearing
+    // that is because the default "blur" event is never actually called
+    // as closing is done with javascript
+    $: $formData.deadline && validate("deadline")
 </script>
 
 <Page pageName="Create Contest">
@@ -43,32 +52,32 @@
                         <Input {...attrs} bind:value={$formData.name} />
                     </FormControl>
                     <FormDescription>How should your contest be called?</FormDescription>
-                    <FormFieldErrors />
+                    <FormFieldErrors/>
                 </FormField>
                 <FormField {form} name="description">
                     <FormControl let:attrs>
                         <FormLabel>Description</FormLabel>
                         <Input {...attrs} bind:value={$formData.description} />
                     </FormControl>
-                    <FormFieldErrors />
+                    <FormFieldErrors/>
                 </FormField>
                 <FormField {form} name="deadline">
                     <FormControl let:attrs>
                         <FormLabel>Deadline</FormLabel>
-                        <DateTimePicker {...attrs} bind:value={$formData.deadline} />
+                        <DateTimePicker {...attrs} bind:value={$formData.deadline} futureOnly/>
                         <input name={attrs.name} bind:value={$formData.deadline} hidden/>
                     </FormControl>
                     <FormFieldErrors/>
                 </FormField>
                 <div class="mt-4 space-y-2">
-                    <FormField {form} name="public" class="flex flex-row items-start space-x-3 space-y-0">
+                    <FormField {form} name="publicAccessible" class="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl let:attrs>
-                            <Checkbox {...attrs} bind:checked={$formData.public} />
+                            <Checkbox {...attrs} bind:checked={$formData.publicAccessible} />
                             <div class="space-y-1 leading-none">
                                 <FormLabel>Public</FormLabel>
                                 <FormDescription>If enabled, everyone can see and join</FormDescription>
                             </div>
-                            <input name={attrs.name} bind:value={$formData.publicGrading} hidden/>
+                            <input name={attrs.name} bind:value={$formData.publicAccessible} hidden/>
                         </FormControl>
                         <FormFieldErrors />
                     </FormField>

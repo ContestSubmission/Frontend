@@ -84,7 +84,6 @@
                         </FormControl>
                         <FormFieldErrors />
                     </FormField>
-                    {JSON.stringify(validation?.errors)}
                     <FormButton class="w-full" disabled={!validation?.valid}>Create my Contest!</FormButton>
                 </div>
             </form>

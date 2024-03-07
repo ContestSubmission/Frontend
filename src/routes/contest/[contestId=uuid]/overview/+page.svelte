@@ -28,8 +28,6 @@
         return contest;
     }
 
-    let contestPromise: Promise<PersonalContestDTO> = retrieveContest();
-
     onMount(() => {
         if (browser && $page.data.fromInvite) {
             toast.success("Joined Contest", {
@@ -44,11 +42,19 @@
             // this is done to prevent the toast from showing again if the user refreshes the page
             let query = new URLSearchParams($page.url.searchParams.toString());
             query.delete("fromInvite");
-            goto("?" + query.toString(), {replaceState: true});
+            goto("?" + query.toString(), { replaceState: true });
         }
     });
 
     export let data: PageData;
+
+    // the fallback avoids loading the contest while authentication is still in progress (which would fail)
+    // this is required due to https://github.com/sveltejs/svelte/issues/10501
+    let contestPromise: Promise<PersonalContestDTO> = browser ? retrieveContest() : new Promise(() => {});
+    function refreshContest() {
+        console.debug("Change processed, refreshing contest...")
+        contestPromise = retrieveContest();
+    }
 </script>
 
 <Page pageName="Contest overview">
@@ -57,7 +63,13 @@
             {#await contestPromise}
                 <p>Loading...</p>
             {:then contest}
-                <ContestOverviewComponent {contest} {lastSubmission} uploadForm={data.form}/>
+                <ContestOverviewComponent
+                    {contest}
+                    {lastSubmission}
+                    uploadForm={data.submissionUploadForm}
+                    teamCreateForm={data.teamCreateForm}
+                    on:updated={refreshContest}
+                />
             {:catch error}
                 <p>{error.message}</p>
             {/await}

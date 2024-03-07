@@ -2,25 +2,34 @@
     import { formatDateAndRelative, time } from "$lib/date_utils.js";
     import { page } from "$app/stores";
     import { isOngoing } from "$lib/contest_utils.js";
-    import { type FormSchema } from "./upload-schema";
+    import { type FormSchema as UploadFormSchema } from "./submission/upload-submission-schema";
+    import { type FormSchema as TeamCreateFormSchema } from "./team/create-team-schema";
     import H1 from "$lib/components/utils/typography/H1.svelte";
     import { Button } from "$lib/components/ui/button/index.js";
-    import InviteComponent from "./InviteComponent.svelte";
+    import InviteComponent from "./team/InviteComponent.svelte";
     import EndNowButton from "./EndNowButton.svelte";
     import A from "$lib/components/utils/typography/A.svelte";
     import { type PersonalContestDTO, type Submission } from "@contestsubmission/api-client";
-    import UploadComponent from "./UploadComponent.svelte";
+    import UploadComponent from "./submission/UploadComponent.svelte";
     import type { Infer, SuperValidated } from "sveltekit-superforms";
     import { Tabs, TabsContent, TabsList, TabsTrigger } from "$lib/components/ui/tabs";
+    import TeamCreateComponent from "./team/TeamCreateComponent.svelte";
 
     export let contest: PersonalContestDTO;
 
-    export let uploadForm: SuperValidated<Infer<FormSchema>>
+    export let uploadForm: SuperValidated<Infer<UploadFormSchema>>
+    export let teamCreateForm: SuperValidated<Infer<TeamCreateFormSchema>>
 
     export let lastSubmission: Submission | null;
 
-    const teamPageShown = contest.team != null;
-    const uploadShown = teamPageShown && isOngoing(contest);
+    const userId = $page.data?.session?.user.id;
+    const isOrganizer = contest.organizer.id === userId;
+    const ongoing = isOngoing(contest);
+
+    // either you already have a team or can make one
+    const teamPageShown = (contest.team != null || ongoing) && !isOrganizer;
+    // you have a team and can still upload something
+    const uploadShown = contest.team != null && ongoing;
 </script>
 
 
@@ -30,17 +39,17 @@
     <p class="p-0 m-0">{contest.description}</p>
 {/if}
 <div class="gap-2 flex flex-col mt-4">
-    {#if contest.publicGrading || contest.organizer.id === $page.data?.session?.user.id}
+    {#if contest.publicGrading || isOrganizer}
         <Button href="grade">View submissions</Button>
     {/if}
-    {#if contest.organizer.id === $page.data?.session?.user.id && isOngoing(contest)}
-        <EndNowButton contestId={contest.id} on:ended/>
+    {#if isOrganizer && ongoing}
+        <EndNowButton contestId={contest.id} on:updated/>
     {/if}
-    {#if contest.team != null}
+    {#if teamPageShown || uploadShown}
         <Tabs>
-            <TabsList class="w-full">
+            <TabsList class="w-full mt-8">
                 {#if teamPageShown}
-                    <TabsTrigger value="team" class="w-full data-[state=active]:bg-accent">Team management</TabsTrigger>
+                    <TabsTrigger value="team" class="w-full data-[state=active]:bg-accent">My Team</TabsTrigger>
                 {/if}
                 {#if uploadShown}
                     <TabsTrigger value="upload" class="w-full data-[state=active]:bg-accent">Upload</TabsTrigger>
@@ -49,22 +58,28 @@
             <TabsContent value="team">
                 {#if teamPageShown}
                     <div class="flex flex-col gap-2">
-                        <p>Your team: {contest.team.name}</p>
-                        {#if contest.team.owner.id === $page.data?.session?.user.id}
-                            <InviteComponent {contest}/>
+                        {#if contest.team != null}
+                            <p>Your team: {contest.team.name}</p>
+                            {#if contest.team.owner.id === userId && ongoing}
+                                <InviteComponent {contest}/>
+                            {/if}
+                        {:else}
+                            <TeamCreateComponent data={teamCreateForm} on:updated/>
                         {/if}
                     </div>
                 {/if}
             </TabsContent>
             <TabsContent value="upload">
-                <div class="pt-2 grid w-full items-center gap-1.5">
-                    {#if isOngoing(contest)}
-                        <UploadComponent {contest} bind:lastSubmission data={uploadForm}/>
-                    {/if}
-                    {#if lastSubmission != null && lastSubmission.url}
-                        <A href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
-                    {/if}
-                </div>
+                {#if uploadShown}
+                    <div class="pt-2 grid w-full items-center gap-1.5">
+                        {#if ongoing}
+                            <UploadComponent {contest} bind:lastSubmission data={uploadForm}/>
+                        {/if}
+                        {#if lastSubmission != null && lastSubmission.url}
+                            <A href={lastSubmission.url}>Existing submission (#{lastSubmission.id})</A>
+                        {/if}
+                    </div>
+                {/if}
             </TabsContent>
         </Tabs>
     {/if}

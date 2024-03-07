@@ -68,7 +68,7 @@
     <DialogHeader>
         <DialogTitle>Grade {grading.team.name}'s submission</DialogTitle>
         <DialogDescription>
-            <form method="post" use:enhance class="space-y-4">
+            <form method="POST" use:enhance class="space-y-4">
                 <FormField {form} name="grade">
                     <FormControl let:attrs>
                         <FormLabel>Score</FormLabel>

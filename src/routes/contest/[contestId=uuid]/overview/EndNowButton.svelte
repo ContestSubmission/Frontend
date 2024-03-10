@@ -23,7 +23,7 @@
     async function submit() {
         state = "submitting";
         await Resources.contest.contestIdEndNowPut({ id: contestId });
-        eventDispatcher("ended");
+        eventDispatcher("updated");
         state = "idle";
         dialogOpen = false;
     }

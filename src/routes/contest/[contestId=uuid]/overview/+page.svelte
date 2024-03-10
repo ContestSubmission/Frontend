@@ -8,20 +8,18 @@
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
-    import { clearContestCache, contestCache, loadContest, mayResolve } from "$lib/contest_cache";
     import ContestOverviewComponent from "./ContestOverviewComponent.svelte";
     import type { PageData } from "./$types";
+    import { Resources } from "$lib/client/api_client";
 
     const contestId = $page.params.contestId;
 
     let lastSubmission: Submission | null;
 
     async function retrieveContest() {
-        clearContestCache(contestId);
-        let contest = await mayResolve($contestCache[contestId])
-            ?? await loadContest(contestId, $contestCache);
+        let contest = await Resources.contest.contestIdPersonalGet({ id: contestId });
 
-        lastSubmission = contest.submissions?.reduce((prev, curr) => {
+        lastSubmission = contest.submissions?.reduce((prev: Submission | null, curr: Submission) => {
             if (prev == null) return curr;
             if (curr.handedInAt > prev.handedInAt) return curr;
             return prev;
@@ -29,8 +27,6 @@
 
         return contest;
     }
-
-    let contestPromise: Promise<PersonalContestDTO> = retrieveContest();
 
     onMount(() => {
         if (browser && $page.data.fromInvite) {
@@ -46,11 +42,19 @@
             // this is done to prevent the toast from showing again if the user refreshes the page
             let query = new URLSearchParams($page.url.searchParams.toString());
             query.delete("fromInvite");
-            goto("?" + query.toString(), {replaceState: true});
+            goto("?" + query.toString(), { replaceState: true });
         }
     });
 
     export let data: PageData;
+
+    // the fallback avoids loading the contest while authentication is still in progress (which would fail)
+    // this is required due to https://github.com/sveltejs/svelte/issues/10501
+    let contestPromise: Promise<PersonalContestDTO> = browser ? retrieveContest() : new Promise(() => {});
+    function refreshContest() {
+        console.debug("Change processed, refreshing contest...")
+        contestPromise = retrieveContest();
+    }
 </script>
 
 <Page pageName="Contest overview">
@@ -59,7 +63,13 @@
             {#await contestPromise}
                 <p>Loading...</p>
             {:then contest}
-                <ContestOverviewComponent {contest} {lastSubmission} uploadForm={data.form}/>
+                <ContestOverviewComponent
+                    {contest}
+                    {lastSubmission}
+                    uploadForm={data.submissionUploadForm}
+                    teamCreateForm={data.teamCreateForm}
+                    on:updated={refreshContest}
+                />
             {:catch error}
                 <p>{error.message}</p>
             {/await}

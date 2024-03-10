@@ -9,9 +9,12 @@
 	let className: $$Props["class"] = undefined;
 	export { className as class };
 
-	const { labelAttrs } = getFormControl();
+	const { labelAttrs, attrs } = getFormControl();
 </script>
 
 <Label {...$labelAttrs} class={cn("data-[fs-error]:text-destructive", className)} {...$$restProps}>
+	{#if $attrs["aria-required"]}
+		<span class="text-red-500">*</span>
+	{/if}
 	<slot {labelAttrs} />
 </Label>

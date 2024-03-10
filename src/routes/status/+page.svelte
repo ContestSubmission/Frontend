@@ -1,5 +1,5 @@
 <script lang="ts">
-    import semver, { SemVer } from "semver";
+    import semver from "semver";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
     import Container from "$lib/components/ui/container/Container.svelte";
     import H2 from "$lib/components/utils/typography/H2.svelte";
@@ -7,9 +7,9 @@
     import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import Page from "$lib/components/Page.svelte";
 
-    let clientVersion: SemVer = semver.parse(rootPackage.dependencies["@contestsubmission/api-client"])!
+    const clientVersion = semver.parse(rootPackage.dependencies["@contestsubmission/api-client"])!
 
-    let serverVersion = Resources.meta.infoGet();
+    const serverVersion = Resources.meta.infoGet();
 
     function diffColor(diff: semver.ReleaseType | null) {
         switch (diff) {

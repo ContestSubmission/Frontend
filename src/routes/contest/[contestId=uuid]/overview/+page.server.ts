@@ -1,26 +1,16 @@
 import type { Actions, PageServerLoad } from "./$types";
-import { superValidate } from "sveltekit-superforms/server";
-import { formSchema } from "./upload-schema";
-import { fail } from "@sveltejs/kit";
-import { zod } from "sveltekit-superforms/adapters";
+import { action as teamCreateAction, form as teamCreateForm } from "./team/create-team-form";
+import { action as submissionUploadAction, form as submissionUploadForm } from "./submission/upload-submission-form";
 
 export const load = (async ({ url }) => {
     return {
-        form: await superValidate(zod(formSchema)),
+        submissionUploadForm: await submissionUploadForm(),
+        teamCreateForm: await teamCreateForm(),
         fromInvite: url.searchParams.get("fromInvite") == "true"
     };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-    default: async (event) => {
-        const form = await superValidate(event, zod(formSchema));
-        if (!form.valid) {
-            return fail(400, {
-                form
-            });
-        }
-        return {
-            form
-        };
-    }
+    submissionUpload: submissionUploadAction,
+    teamCreate: teamCreateAction
 };

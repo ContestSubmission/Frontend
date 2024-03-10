@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { FormSchema } from "./upload-schema.js";
-    import { formSchema } from "./upload-schema.js";
-    import { FormButton, FormControl, FormField, FormFieldErrors } from "$lib/components/ui/form/index.js";
+    import type { FormSchema } from "./upload-submission-schema.js";
+    import { formSchema } from "./upload-submission-schema.js";
+    import { FormButton, FormControl, FormField, FormFieldErrors } from "$lib/components/ui/form";
     import A from "$lib/components/utils/typography/A.svelte";
     import type { PersonalContestDTO, PreSignedPost, Submission } from "@contestsubmission/api-client";
     import { Resources, responseErrorHandler } from "$lib/client/api_client.js";
@@ -81,7 +81,8 @@
     }
 </script>
 
-<form method="post" use:enhance enctype="multipart/form-data" class="flex flex-row w-full gap-2">
+<form method="POST" action="?/submissionUpload" use:enhance enctype="multipart/form-data"
+      class="flex flex-row w-full gap-2">
     <FormField {form} name="file" class="w-full text-left">
         <FormControl let:attrs>
             <Input {...attrs} on:input={updateSelectedFile} type="file" on:change={handleChange}/>
@@ -89,7 +90,7 @@
         <FormFieldErrors class="text-left"/>
     </FormField>
     <FormButton
-        disabled={state === "uploading" || state === "submitting" || $allErrors.length > 0 || $formData.file == null}>
+            disabled={state === "uploading" || state === "submitting" || $allErrors.length > 0 || $formData.file == null}>
         Upload
     </FormButton>
 </form>

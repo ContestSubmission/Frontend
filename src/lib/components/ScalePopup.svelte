@@ -21,7 +21,7 @@
                          step={1}
                          max={MAX_SCALE}
                          formatter={value => {
-                             if (value > MAX_SCALE - 20) return "schasaugert";
+                             if (value > MAX_SCALE - 10) return "schasaugert";
                              return `${value}%`;
                          }}
                          on:change={e => {

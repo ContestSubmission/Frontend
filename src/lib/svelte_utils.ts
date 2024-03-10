@@ -1,7 +1,8 @@
-import type {Builder} from "bits-ui";
+import type { Page } from "@sveltejs/kit";
+import type { Builder } from "bits-ui";
 
 export function linkStyles(url: string,
-                           page: import('@sveltejs/kit').Page,
+                           page: Page,
                            classes: string = "bg-yellow-400 text-slate-700 hover:bg-yellow-300") {
     if (page.url.pathname.startsWith("/" + url)) {
         return classes;
@@ -19,8 +20,8 @@ export const buttonNameBuilder = (name: string): Builder => ({
 export function getCookie(name: string) {
     const cookieName = name + "=";
     const decodedCookie = decodeURIComponent(document.cookie);
-    const ca = decodedCookie.split(';');
-    for(const element of ca) {
+    const ca = decodedCookie.split(";");
+    for (const element of ca) {
         const c = element.trimStart();
         if (c.startsWith(cookieName)) {
             return c.substring(cookieName.length, c.length);
@@ -37,7 +38,7 @@ export function setCookie(name: string, value: string, exdays: number, secure: b
 }
 
 export function deleteCookie(name: string) {
-    document.cookie = name+'=; Max-Age=-99999999;';
+    document.cookie = name + "=; Max-Age=-99999999;";
 }
 
 /**

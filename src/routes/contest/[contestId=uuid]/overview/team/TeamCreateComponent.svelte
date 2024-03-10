@@ -14,6 +14,7 @@
     } from "$lib/components/ui/form";
     import { Input } from "$lib/components/ui/input";
     import { createEventDispatcher } from "svelte";
+    import { continuousValidation } from "$lib/form_utils";
 
     export let data: SuperValidated<Infer<FormSchema>>;
 
@@ -21,10 +22,15 @@
 
     const form = superForm(data, {
         validators: zodClient(formSchema),
-        onSubmit: () => eventDispatcher("updated")
+        onResult: (result) => {
+            if (result.result.type === "success") {
+                eventDispatcher("updated");
+            }
+        }
     });
 
-    const { form: formData, enhance } = form;
+    const { form: formData, enhance, validateForm, submitting } = form;
+    const validation = continuousValidation(formData, validateForm);
 </script>
 
 <Dialog>
@@ -34,7 +40,7 @@
     If you want to join this contest, click here to set your team up!
     <DialogContent>
         <form method="POST" action="?/teamCreate" use:enhance>
-            <FormField {form} name="name">
+            <FormField {form} name="name" class="">
                 <FormControl let:attrs>
                     <FormLabel>Team name</FormLabel>
                     <Input {...attrs} bind:value={$formData.name}/>
@@ -42,7 +48,7 @@
                 <FormDescription>What should your team be called?</FormDescription>
                 <FormFieldErrors/>
             </FormField>
-            <FormButton>Create!</FormButton>
+            <FormButton class="w-full mt-2" disabled={!$validation.valid || $submitting}>Create!</FormButton>
         </form>
     </DialogContent>
 </Dialog>

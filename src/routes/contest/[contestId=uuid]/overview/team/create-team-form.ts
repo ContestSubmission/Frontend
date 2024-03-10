@@ -2,7 +2,7 @@ import type { Action } from "../$types";
 import { superValidate } from "sveltekit-superforms/server";
 import { zod } from "sveltekit-superforms/adapters";
 import { formSchema } from "./create-team-schema";
-import { fail, redirect } from "@sveltejs/kit";
+import { fail  } from "@sveltejs/kit";
 import { createConfig } from "$lib/client/api_client";
 import { type ContestContestIdTeamPostRequest, TeamResourceApi } from "@contestsubmission/api-client";
 import type { MySession } from "$lib/auth";
@@ -30,5 +30,7 @@ export const action: Action = async (event) => {
     const contestResource = new TeamResourceApi(createConfig(session.access_token));
     await contestResource.contestContestIdTeamPost(requestParams);
 
-    return redirect(302, `/contest/${contestId}/overview`);
+    return {
+        form
+    }
 }

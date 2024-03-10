@@ -13,13 +13,14 @@
     } from "$lib/components/ui/form";
     import type { PageData } from "./$types";
     import { zodClient } from "sveltekit-superforms/adapters";
-    import { type FormSchema, formSchema } from "./schema";
-    import { type Infer, superForm, type SuperValidated } from "sveltekit-superforms";
+    import { formSchema } from "./schema";
+    import { superForm } from "sveltekit-superforms";
     import { Input } from "$lib/components/ui/input";
     import DateTimePicker from "$lib/components/ui/date-time-picker/DateTimePicker.svelte";
     import { Checkbox } from "$lib/components/ui/checkbox";
     import { ensureLoggedIn } from "$lib/auth";
     import { page } from "$app/stores";
+    import { continuousValidation } from "$lib/form_utils";
 
     ensureLoggedIn($page);
 
@@ -29,10 +30,8 @@
         validators: zodClient(formSchema)
     });
 
-    const { form: formData, enhance, validateForm, validate } = form;
-
-    let validation: SuperValidated<Infer<FormSchema>>;
-    formData.subscribe(async (_) => validation = await validateForm());
+    const { form: formData, enhance, validateForm, validate, submitting } = form;
+    const validation = continuousValidation(formData, validateForm);
 
     // workaround to fix errors not appearing
     // that is because the default "blur" event is never actually called
@@ -93,7 +92,7 @@
                         </FormControl>
                         <FormFieldErrors/>
                     </FormField>
-                    <FormButton class="w-full" disabled={!validation?.valid}>Create my Contest!</FormButton>
+                    <FormButton class="w-full" disabled={!$validation?.valid || $submitting}>Create my Contest!</FormButton>
                 </div>
             </form>
         </Container>

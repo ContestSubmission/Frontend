@@ -7,9 +7,9 @@
     import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import Page from "$lib/components/Page.svelte";
 
-    let clientVersion = semver.parse(rootPackage.dependencies["@contestsubmission/api-client"])!
+    const clientVersion = semver.parse(rootPackage.dependencies["@contestsubmission/api-client"])!
 
-    let serverVersion = Resources.meta.infoGet();
+    const serverVersion = Resources.meta.infoGet();
 
     function diffColor(diff: semver.ReleaseType | null) {
         switch (diff) {

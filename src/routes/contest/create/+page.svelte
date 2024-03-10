@@ -21,7 +21,7 @@
     import { ensureLoggedIn } from "$lib/auth";
     import { page } from "$app/stores";
 
-    ensureLoggedIn($page)
+    ensureLoggedIn($page);
 
     export let data: PageData;
 
@@ -49,7 +49,7 @@
                 <FormField {form} name="name">
                     <FormControl let:attrs>
                         <FormLabel>Name</FormLabel>
-                        <Input {...attrs} bind:value={$formData.name} />
+                        <Input {...attrs} bind:value={$formData.name}/>
                     </FormControl>
                     <FormDescription>How should your contest be called?</FormDescription>
                     <FormFieldErrors/>
@@ -57,7 +57,7 @@
                 <FormField {form} name="description">
                     <FormControl let:attrs>
                         <FormLabel>Description</FormLabel>
-                        <Input {...attrs} bind:value={$formData.description} />
+                        <Input {...attrs} bind:value={$formData.description}/>
                     </FormControl>
                     <FormFieldErrors/>
                 </FormField>
@@ -72,26 +72,26 @@
                 <div class="mt-4 space-y-2">
                     <FormField {form} name="publicAccessible" class="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl let:attrs>
-                            <Checkbox {...attrs} bind:checked={$formData.publicAccessible} />
+                            <Checkbox {...attrs} bind:checked={$formData.publicAccessible}/>
                             <div class="space-y-1 leading-none">
                                 <FormLabel>Public</FormLabel>
                                 <FormDescription>If enabled, everyone can see and join</FormDescription>
                             </div>
                             <input name={attrs.name} bind:value={$formData.publicAccessible} hidden/>
                         </FormControl>
-                        <FormFieldErrors />
+                        <FormFieldErrors/>
                     </FormField>
                     <FormField {form} name="publicGrading" class="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl let:attrs>
-                            <Checkbox {...attrs} bind:checked={$formData.publicGrading} />
+                            <Checkbox {...attrs} bind:checked={$formData.publicGrading}/>
                             <div class="space-y-1 leading-none">
                                 <FormLabel>Public Grading</FormLabel>
                                 <FormDescription>If enabled, everyone (with an account) can grade submissions
                                 </FormDescription>
                             </div>
-                            <input name={attrs.name} bind:value={$formData.publicGrading} hidden />
+                            <input name={attrs.name} bind:value={$formData.publicGrading} hidden/>
                         </FormControl>
-                        <FormFieldErrors />
+                        <FormFieldErrors/>
                     </FormField>
                     <FormButton class="w-full" disabled={!validation?.valid}>Create my Contest!</FormButton>
                 </div>

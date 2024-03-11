@@ -14,7 +14,7 @@
     import type { PageData } from "./$types";
     import { zodClient } from "sveltekit-superforms/adapters";
     import { formSchema } from "./schema";
-    import { superForm } from "sveltekit-superforms";
+    import { intProxy, superForm } from "sveltekit-superforms";
     import { Input } from "$lib/components/ui/input";
     import DateTimePicker from "$lib/components/ui/date-time-picker/DateTimePicker.svelte";
     import { Checkbox } from "$lib/components/ui/checkbox";
@@ -37,6 +37,8 @@
     // that is because the default "blur" event is never actually called
     // as closing is done with javascript
     $: $formData.deadline && validate("deadline")
+
+    const teamSizeProxy = intProxy(formData, "maxTeamSize");
 </script>
 
 <Page pageName="Create Contest">
@@ -50,7 +52,6 @@
                         <FormLabel>Name</FormLabel>
                         <Input {...attrs} bind:value={$formData.name}/>
                     </FormControl>
-                    <FormDescription>How should your contest be called?</FormDescription>
                     <FormFieldErrors/>
                 </FormField>
                 <FormField {form} name="description">
@@ -65,6 +66,13 @@
                         <FormLabel>Deadline</FormLabel>
                         <DateTimePicker {...attrs} bind:value={$formData.deadline} futureOnly/>
                         <input name={attrs.name} bind:value={$formData.deadline} hidden/>
+                    </FormControl>
+                    <FormFieldErrors/>
+                </FormField>
+                <FormField {form} name="maxTeamSize">
+                    <FormControl let:attrs>
+                        <FormLabel>Max team size</FormLabel>
+                        <Input type="number" {...attrs} bind:value={$teamSizeProxy}/>
                     </FormControl>
                     <FormFieldErrors/>
                 </FormField>

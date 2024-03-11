@@ -5,7 +5,7 @@ export const formSchema = z.object({
     description: z.string().max(50).nullable(),
     deadline: z.date()
         .min(new Date(), "Date must be in the future"),
-    maxTeamSize: z.number().int().min(1).max(50).default(1),
+    maxTeamSize: z.number().int().min(1).max(50).default(4),
     publicAccessible: z.boolean().default(true),
     publicGrading: z.boolean().default(true)
 });

@@ -2,6 +2,7 @@
 	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import * as Calendar from ".";
 	import { cn } from "$lib/utils";
+	import type { DateValue } from "@internationalized/date";
 
 	type $$Props = CalendarPrimitive.Props;
 
@@ -13,6 +14,19 @@
 
 	let className: $$Props["class"] = undefined;
 	export { className as class };
+
+	/**
+	 * Returns true if the week has days within the bounds defined by `min` and `max`.
+	 */
+	function boundsFilter(elements: DateValue[]): boolean {
+		const { minValue: min, maxValue: max } = $$props;
+		// if no bounds are defined, all weeks are within bounds
+		if (!min && !max) return true;
+
+		return elements.some((date) =>
+			(!min || date >= min) && (!max || date <= max)
+		);
+	}
 </script>
 
 <CalendarPrimitive.Root
@@ -43,7 +57,7 @@
 					</Calendar.GridRow>
 				</Calendar.GridHead>
 				<Calendar.GridBody>
-					{#each month.weeks as weekDates}
+					{#each month.weeks.filter(boundsFilter) as weekDates}
 						<Calendar.GridRow class="mt-2 w-full">
 							{#each weekDates as date}
 								<Calendar.Cell {date}>

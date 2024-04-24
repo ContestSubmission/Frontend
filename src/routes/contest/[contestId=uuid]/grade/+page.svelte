@@ -2,7 +2,6 @@
     import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
-    import AlertTriangle from "lucide-svelte/icons/alert-triangle";
     import ArrowLeft from "lucide-svelte/icons/arrow-left";
     import IconButton from "$lib/components/utils/icon-button/IconButton.svelte";
     import { Resources } from "$lib/client/api_client";
@@ -11,6 +10,7 @@
     import { isOngoing } from "$lib/contest_utils.js";
     import type { PageData } from "./$types";
     import { ensureLoggedIn } from "$lib/auth";
+    import Warning from "$lib/components/Warning.svelte";
 
     ensureLoggedIn($page);
 
@@ -35,10 +35,7 @@
             {:then toGrade}
                 <div class="mb-4">
                     {#if isOngoing(contest)}
-                        <div class="w-full flex justify-center items-center text-orange-400">
-                            <AlertTriangle/>
-                            <p class="ml-2">Contest is still running, you can't grade yet</p>
-                        </div>
+                        <Warning>Contest is still running, you can't grade yet</Warning>
                     {/if}
                 </div>
 

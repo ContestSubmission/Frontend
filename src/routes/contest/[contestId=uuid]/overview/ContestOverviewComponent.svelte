@@ -14,6 +14,7 @@
     import type { Infer, SuperValidated } from "sveltekit-superforms";
     import { Tabs, TabsContent, TabsList, TabsTrigger } from "$lib/components/ui/tabs";
     import TeamCreateComponent from "./team/TeamCreateComponent.svelte";
+    import Warning from "$lib/components/Warning.svelte";
 
     export let contest: PersonalContestDTO;
 
@@ -39,8 +40,13 @@
     <p class="p-0 m-0">{contest.description}</p>
 {/if}
 <div class="gap-2 flex flex-col mt-4">
-    {#if contest.publicGrading || isOrganizer}
-        <Button href="grade">View submissions</Button>
+    {#if isOrganizer || contest.publicGrading}
+        {#if isOrganizer || !ongoing}
+            <Button href="grade">View submissions</Button>
+        {:else}
+            <Button disabled>View submissions</Button>
+            <Warning>Contest is still running, you can't view submissions yet</Warning>
+        {/if}
     {/if}
     {#if isOrganizer && ongoing}
         <EndNowButton contestId={contest.id} on:updated/>

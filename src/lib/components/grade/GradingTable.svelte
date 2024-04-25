@@ -3,7 +3,6 @@
     import { type Writable } from "svelte/store";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$lib/components/ui/table";
-    import A from "$lib/components/utils/typography/A.svelte";
     import { addSortBy } from "svelte-headless-table/plugins";
     import ArrowDown from "lucide-svelte/icons/arrow-down";
     import ArrowUp from "lucide-svelte/icons/arrow-up";
@@ -15,6 +14,8 @@
     import P from "$lib/components/utils/typography/P.svelte";
     import { isOngoing } from "$lib/contest_utils";
     import { Resources } from "$lib/client/api_client";
+    import SubmissionViewable from "./SubmissionViewable.svelte";
+    import A from "$lib/components/utils/typography/A.svelte";
 
     export let contest: PersonalContestDTO;
 
@@ -40,7 +41,8 @@
             header: "Submission",
             accessor: "submission",
             cell: ({value}) => value && value.url && value.fileName
-                ? createRender(A, {href: value.url, target: "_blank"}).slot(value.fileName)
+                ? createRender(SubmissionViewable, {url: value.url, fileName: value.fileName, withPreview: true})
+                    .slot(createRender(A, {href: value.url, target: "_blank"}).slot(value.fileName))
                 : createRender(P, {class: isOngoing(contest) ? "text-orange-400" : "text-red-500"}).slot("No submission"),
             plugins: {
                 sort: {

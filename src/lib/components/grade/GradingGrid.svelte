@@ -29,7 +29,7 @@
 
 <div class="w-full gap-5 m-auto parent">
     {#each $data as entry}
-        <Card class="w-full">
+        <Card class="w-full flex flex-col">
             <CardHeader class="relative">
                 <GradingDropDown on:update={updateGradeList}
                                  triggerClass="absolute right-6"
@@ -46,11 +46,9 @@
                     {/if}
                 </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent class="w-full flex flex-col gap-2 flex-grow justify-between">
                 {#if entry.submission}
-                    <SubmissionViewable url={entry.submission.url} fileName={entry.submission.fileName} withPreview={false}>
-                        <img class="block w-full" src={entry.submission.url} alt={entry.submission.fileName}/>
-                    </SubmissionViewable>
+                    <SubmissionViewable submission={entry.submission} withPreview={false}/>
                 {:else}
                     No submission.
                 {/if}

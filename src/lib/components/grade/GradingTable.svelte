@@ -41,7 +41,7 @@
             header: "Submission",
             accessor: "submission",
             cell: ({value}) => value && value.url && value.fileName
-                ? createRender(SubmissionViewable, {url: value.url, fileName: value.fileName, withPreview: true})
+                ? createRender(SubmissionViewable, {submission: value, withPreview: true})
                     .slot(createRender(A, {href: value.url, target: "_blank"}).slot(value.fileName))
                 : createRender(P, {class: isOngoing(contest) ? "text-orange-400" : "text-red-500"}).slot("No submission"),
             plugins: {

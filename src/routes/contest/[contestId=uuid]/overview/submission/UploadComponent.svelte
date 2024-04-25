@@ -28,7 +28,8 @@
         const preSignedPost: PreSignedPost | null = await Resources.submission.contestContestIdSubmissionTeamIdGetPresignedUrlGet({
             contestId: contest.id,
             teamId: contest.team!.id!,
-            fileName: fileToUpload.name
+            fileName: fileToUpload.name,
+            contentType: fileToUpload.type
         }).catch(responseErrorHandler);
         if (preSignedPost == null) {
             state = "error";

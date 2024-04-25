@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createRender, createTable, Render, Subscribe } from "svelte-headless-table";
-    import { writable } from "svelte/store";
+    import { type Writable } from "svelte/store";
     import type { GradeTeamOverviewDTO, PersonalContestDTO } from "@contestsubmission/api-client";
     import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$lib/components/ui/table";
     import A from "$lib/components/utils/typography/A.svelte";
@@ -16,13 +16,9 @@
     import { isOngoing } from "$lib/contest_utils";
     import { Resources } from "$lib/client/api_client";
 
-    let dataExport: GradeTeamOverviewDTO[];
-
-    export { dataExport as data };
-
     export let contest: PersonalContestDTO;
 
-    let data = writable(dataExport);
+    export let data: Writable<GradeTeamOverviewDTO[]>
 
     const table = createTable(data, {
         sort: addSortBy({

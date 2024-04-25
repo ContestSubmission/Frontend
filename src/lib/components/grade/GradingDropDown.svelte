@@ -16,10 +16,13 @@
     import GradingPopup from "./GradingPopup.svelte";
     import type { Infer, SuperValidated } from "sveltekit-superforms";
     import type { FormSchema } from "./schema";
+    import { cn } from "$lib/utils";
 
     export let contest: PersonalContestDTO;
     export let grading: GradeTeamOverviewDTO;
     export let gradingForm: SuperValidated<Infer<FormSchema>>;
+
+    export let triggerClass = "";
 
     let submissionId: number | null = grading.submission?.id ?? null;
 
@@ -36,7 +39,7 @@
                 variant="ghost"
                 builders={[builder]}
                 size="icon"
-                class="relative h-8 w-8 p-0"
+                class={cn("relative h-8 w-8 p-0", triggerClass)}
             >
                 <span class="sr-only">Open menu</span>
                 <MoreHorizontal class="h-4 w-4" />

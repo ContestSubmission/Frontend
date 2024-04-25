@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { superValidate } from "sveltekit-superforms/server";
-import { formSchema } from "./schema";
+import { formSchema } from "$lib/components/grade/schema";
 import { fail } from "@sveltejs/kit";
 import { zod } from "sveltekit-superforms/adapters";
 

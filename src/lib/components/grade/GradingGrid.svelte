@@ -6,6 +6,7 @@
     import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "$lib/components/ui/card";
     import GradingDropDown from "./GradingDropDown.svelte";
     import { Resources } from "$lib/client/api_client";
+    import SubmissionViewable from "$lib/components/grade/SubmissionViewable.svelte";
 
     export let contest: PersonalContestDTO;
 
@@ -47,7 +48,9 @@
             </CardHeader>
             <CardContent>
                 {#if entry.submission}
-                    <img class="block w-full" src={entry.submission.url} alt={entry.submission.fileName}/>
+                    <SubmissionViewable url={entry.submission.url} fileName={entry.submission.fileName} withPreview={false}>
+                        <img class="block w-full" src={entry.submission.url} alt={entry.submission.fileName}/>
+                    </SubmissionViewable>
                 {:else}
                     No submission.
                 {/if}

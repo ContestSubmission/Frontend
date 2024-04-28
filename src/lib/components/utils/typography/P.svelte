@@ -6,6 +6,6 @@
     export { classes as class };
 </script>
 
-<p class={cn("font-medium text-primary", classes)} {...$$restProps}>
+<p class={cn("font-medium text-foreground", classes)} {...$$restProps}>
     <slot/>
 </p>

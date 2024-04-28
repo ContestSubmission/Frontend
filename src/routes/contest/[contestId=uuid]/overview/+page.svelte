@@ -11,6 +11,7 @@
     import ContestOverviewComponent from "./ContestOverviewComponent.svelte";
     import type { PageData } from "./$types";
     import { Resources } from "$lib/client/api_client";
+    import { loadingContest } from "$lib/loading_utils";
 
     const contestId = $page.params.contestId;
 
@@ -61,7 +62,12 @@
     <FullPageCentered>
         <Container class="p-4 min-w-[40rem]">
             {#await contestPromise}
-                <p>Loading...</p>
+                <ContestOverviewComponent
+                    contest={loadingContest}
+                    loaded={false}
+                    uploadForm={data.submissionUploadForm}
+                    teamCreateForm={data.teamCreateForm}
+                />
             {:then contest}
                 <ContestOverviewComponent
                     {contest}

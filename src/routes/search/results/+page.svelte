@@ -4,9 +4,8 @@
     import type { PageData } from "./$types";
     import Page from "$lib/components/Page.svelte";
     import { page } from "$app/stores";
-    import { Stretch } from "svelte-loading-spinners";
-    import colors from "tailwindcss/colors";
-    import ContestCollection from "$lib/components/contest/ContestCollection.svelte";
+    import { loadingContests } from "$lib/loading_utils";
+    import Contests from "$lib/components/contest/Contests.svelte";
 
     export let data: PageData;
 </script>
@@ -14,18 +13,14 @@
 <Page pageName="Search results" showPageName={false}>
     <!-- negative z-index to allow clicks to navbar -->
     {#await data.streamed.results}
-        <FullPageCentered>
-            <Stretch color={colors.slate['100']}/>
-        </FullPageCentered>
+        <Contests loaded={false} contests={loadingContests}/>
     {:then results}
         {#if results.length === 0}
             <FullPageCentered>
                 <p>No results found</p>
             </FullPageCentered>
         {:else}
-            <div class="w-[80%] m-auto mt-5">
-                <ContestCollection contests={results}/>
-            </div>
+            <Contests contests={results}/>
         {/if}
     {:catch error}
         <FullPageCentered>

@@ -3,6 +3,7 @@
     import ContestCard from "$lib/components/contest/ContestCard.svelte";
 
     export let contests: ContestDTO[] = [];
+    export let loaded: boolean = true;
 </script>
 
 <style>
@@ -15,6 +16,6 @@
 
 <div>
     {#each contests as contest}
-        <ContestCard {contest} />
+        <ContestCard {contest} {loaded}/>
     {/each}
 </div>

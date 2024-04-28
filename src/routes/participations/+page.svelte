@@ -2,11 +2,10 @@
     import Page from "$lib/components/Page.svelte";
     import { Resources } from "$lib/client/api_client";
     import FullPageCentered from "$lib/components/utils/FullPageCentered.svelte";
-    import { Stretch } from "svelte-loading-spinners";
-    import colors from "tailwindcss/colors";
-    import ContestCollection from "$lib/components/contest/ContestCollection.svelte";
     import { page } from "$app/stores";
     import { ensureLoggedIn } from "$lib/auth";
+    import { loadingContests } from "$lib/loading_utils";
+    import Contests from "$lib/components/contest/Contests.svelte";
 
     ensureLoggedIn($page);
 </script>
@@ -14,18 +13,14 @@
 <Page pageName="Participations">
     {#if $page.data.session}
         {#await Resources.contest.contestMyGet()}
-            <FullPageCentered>
-                <Stretch color={colors.slate['100']}/>
-            </FullPageCentered>
+            <Contests contests={loadingContests} loaded={false}/>
         {:then results}
             {#if results.length === 0}
                 <FullPageCentered>
                     <p>No results found</p>
                 </FullPageCentered>
             {:else}
-                <div class="w-[80%] m-auto mt-5">
-                    <ContestCollection contests={results}/>
-                </div>
+                <Contests contests={results} loaded={true}/>
             {/if}
         {:catch error}
             <FullPageCentered>
@@ -33,8 +28,6 @@
             </FullPageCentered>
         {/await}
     {:else}
-        <FullPageCentered>
-            <Stretch color={colors.slate['100']}/>
-        </FullPageCentered>
+        <Contests contests={loadingContests} loaded={false}/>
     {/if}
 </Page>

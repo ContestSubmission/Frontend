@@ -21,6 +21,8 @@
     import { ensureLoggedIn } from "$lib/auth";
     import { page } from "$app/stores";
     import { continuousValidation } from "$lib/form_utils";
+    import { ALL_VIEW_MODES, displayName } from "$lib/components/grade/grade";
+    import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "$lib/components/ui/select";
 
     ensureLoggedIn($page);
 
@@ -39,6 +41,13 @@
     $: $formData.deadline && validate("deadline")
 
     const teamSizeProxy = intProxy(formData, "maxTeamSize");
+
+    $: selectedViewMode = $formData.defaultViewMode
+        ? {
+            label: displayName($formData.defaultViewMode),
+            value: $formData.defaultViewMode
+        }
+        : undefined;
 </script>
 
 <Page pageName="Create Contest">
@@ -74,6 +83,29 @@
                         <FormLabel>Max team size</FormLabel>
                         <Input type="number" {...attrs} bind:value={$teamSizeProxy}/>
                     </FormControl>
+                    <FormFieldErrors/>
+                </FormField>
+                <FormField {form} name="defaultViewMode">
+                    <FormControl let:attrs>
+                        <FormLabel>Default View Mode</FormLabel>
+                        <Select
+                            selected={selectedViewMode}
+                            onSelectedChange={(v) => {
+                              v && ($formData.defaultViewMode = v.value);
+                            }}
+                        >
+                            <SelectTrigger {...attrs}>
+                                <SelectValue placeholder="Select the default view mode" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {#each ALL_VIEW_MODES as mode}
+                                    <SelectItem value={mode} label={displayName(mode)} />
+                                {/each}
+                            </SelectContent>
+                        </Select>
+                        <input hidden bind:value={$formData.defaultViewMode} name={attrs.name} />
+                    </FormControl>
+                    <FormDescription>Set what view should be shown when grading</FormDescription>
                     <FormFieldErrors/>
                 </FormField>
                 <div class="mt-4 space-y-2">

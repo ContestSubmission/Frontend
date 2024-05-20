@@ -9,7 +9,7 @@ function addWeeksToDate(numberOfWeeks: number, dateObj: Date = new Date()) {
 
 export const loadingContest: Contest = {
     id: "",
-    name: "Contest 1",
+    name: "My cool Contest",
     deadline: addWeeksToDate(1),
     description: "This is a contest",
     organizer: {
@@ -26,7 +26,7 @@ export const loadingContests: Contest[] = [
     },
     {
         id: "",
-        name: "My Contest",
+        name: "My long Contest",
         deadline: addWeeksToDate(3),
         description: "Another contest!"
     },

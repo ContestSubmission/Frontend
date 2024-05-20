@@ -15,14 +15,16 @@
     import { Tabs, TabsList, TabsTrigger } from "$lib/components/ui/tabs";
     import { ViewMode } from "$lib/components/grade/grade";
     import { writable } from "svelte/store";
+    import { parseViewMode } from "$lib/components/grade/grade.js";
 
     ensureLoggedIn($page);
 
     const contestId = $page.params.contestId;
 
     export let data: PageData;
+    const contest = data.contest;
 
-    let viewMode: string
+    let viewMode: ViewMode = parseViewMode(contest.defaultViewMode) ?? ViewMode.TABLE;
 </script>
 
 <Page pageName="Grade submissions">
@@ -32,37 +34,31 @@
         </IconButton>
     </div>
     <div class="w-full h-full p-4">
-        {#await Resources.contest.contestIdPersonalGet({ id: contestId })}
+        <H2 class="m-0 p-0 leading-6 w-full text-center">Grade submissions for {contest.name}</H2>
+        {#await Resources.grade.contestContestIdGradeListGet({ contestId })}
             <p class="text-center">Loading...</p>
-        {:then contest}
-            <H2 class="m-0 p-0 leading-6 w-full text-center">Grade submissions for {contest.name}</H2>
-            {#await Resources.grade.contestContestIdGradeListGet({ contestId })}
-                <p class="text-center">Loading...</p>
-            {:then toGrade}
-                <div>
-                    {#if isOngoing(contest)}
-                        <Warning>Contest is still running, you can't grade yet</Warning>
-                    {/if}
-                </div>
+        {:then toGrade}
+            <div>
+                {#if isOngoing(contest)}
+                    <Warning>Contest is still running, you can't grade yet</Warning>
+                {/if}
+            </div>
 
-                <div class="pt-4">
-                    <div class="absolute flex flex-row right-4 -translate-y-12">
-                        <Tabs bind:value={viewMode}>
-                            <TabsList>
-                                <TabsTrigger value={ViewMode.TABLE}>
-                                    <Table_2/>
-                                </TabsTrigger>
-                                <TabsTrigger value={ViewMode.GRID}>
-                                    <LayoutGrid/>
-                                </TabsTrigger>
-                            </TabsList>
-                        </Tabs>
-                    </div>
-                    <GradingView mode={viewMode} data={writable(toGrade)} {contest} gradingForm={data.form}/>
+            <div class="pt-4">
+                <div class="absolute flex flex-row right-4 -translate-y-12">
+                    <Tabs bind:value={viewMode}>
+                        <TabsList>
+                            <TabsTrigger value={ViewMode.TABLE}>
+                                <Table_2/>
+                            </TabsTrigger>
+                            <TabsTrigger value={ViewMode.GRID}>
+                                <LayoutGrid/>
+                            </TabsTrigger>
+                        </TabsList>
+                    </Tabs>
                 </div>
-            {/await}
-        {:catch error}
-            <p>{error.message}</p>
+                <GradingView mode={viewMode} data={writable(toGrade)} {contest} gradingForm={data.form}/>
+            </div>
         {/await}
     </div>
 </Page>

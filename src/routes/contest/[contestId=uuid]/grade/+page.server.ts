@@ -3,12 +3,21 @@ import { superValidate } from "sveltekit-superforms/server";
 import { formSchema } from "$lib/components/grade/schema";
 import { fail } from "@sveltejs/kit";
 import { zod } from "sveltekit-superforms/adapters";
-import { Resources } from "$lib/client/api_client";
+import { initApiClients, Resources } from "$lib/client/api_client";
+import type { MySession } from "$lib/auth";
 
-export const load = (async ({params}) => {
+export const load = (async ({params, locals}) => {
+    const session = (await locals.auth()) as (MySession | null);
+    if (session == null) {
+        throw fail(401);
+    }
+    let client = Resources.instance
+    if (session?.access_token) {
+        client = initApiClients(session.access_token)
+    }
     return {
         form: await superValidate(zod(formSchema)),
-        contest: await Resources.contest.contestIdPersonalGet({ id: params.contestId })
+        contest: await client.contestResource.contestIdPersonalGet({ id: params.contestId })
     };
 }) satisfies PageServerLoad;
 

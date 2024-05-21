@@ -15,12 +15,12 @@ export class Resources {
 
     static instance: Resources = new Resources(new Configuration({basePath: BACKEND_BASE_PATH}));
 
-    private contestResource: ContestResourceApi;
-    private teamResource: TeamResourceApi;
-    private inviteResource: TeamInviteResourceApi;
-    private submissionResource: SubmissionResourceApi;
-    private gradeResource: GradeResourceApi;
-    private meta: MetaResourceApi;
+    contestResource: ContestResourceApi;
+    teamResource: TeamResourceApi;
+    inviteResource: TeamInviteResourceApi;
+    submissionResource: SubmissionResourceApi;
+    gradeResource: GradeResourceApi;
+    meta: MetaResourceApi;
 
     constructor(config: Configuration) {
         this.contestResource = new ContestResourceApi(config);
@@ -56,8 +56,10 @@ export class Resources {
     }
 }
 
-export function initApiClients(access_token: string) {
-    Resources.instance = constructApiClients(access_token);
+export function initApiClients(access_token: string): Resources {
+    const instance = constructApiClients(access_token);
+    Resources.instance = instance;
+    return instance
 }
 
 export function constructApiClients(access_token: string) {

@@ -11,9 +11,9 @@
     import { FieldErrors } from "$lib/components/ui/form";
     import { formatDateAndRelative, time } from "$lib/date_utils";
 
+    export let initialValue: Date | undefined | null = undefined;
     let date: DateValue | undefined = undefined;
-
-    export let value: Date | undefined | null = undefined;
+    export let value: Date | undefined | null = initialValue;
     let firstRun = true;
 
     export let futureOnly: boolean = false;
@@ -37,7 +37,7 @@
             // first run doesn't show an error
             if (firstRun) {
                 firstRun = false;
-                return undefined;
+                return initialValue;
             } else {
                 return null;
             }
@@ -78,7 +78,7 @@
             variant="outline"
             class={cn(
                 "w-full justify-start text-left font-normal",
-                !date && "text-muted-foreground"
+                !value && "text-muted-foreground"
             )}
             builders={[builder]}
         >

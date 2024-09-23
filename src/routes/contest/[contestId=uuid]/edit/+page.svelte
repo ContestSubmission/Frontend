@@ -10,6 +10,8 @@
     import { page } from "$app/stores";
     import { browser } from "$app/environment";
     import { isOngoing } from "$lib/contest_utils";
+    import IconButton from "$lib/components/utils/icon-button/IconButton.svelte";
+    import ArrowLeft from "lucide-svelte/icons/arrow-left";
 
     ensureLoggedIn($page, browser)
 
@@ -20,6 +22,11 @@
 </script>
 
 <Page pageName="Edit contest">
+    <div slot="navbar-left">
+        <IconButton buttonName="Back to overview" href="overview" let:classes>
+            <ArrowLeft class={classes}/>
+        </IconButton>
+    </div>
     <FullPageCentered>
         <Container class="p-8">
             <H1>Edit {contest.name}</H1>

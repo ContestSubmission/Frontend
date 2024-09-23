@@ -1,13 +1,14 @@
 <style>
     div {
-        min-height: 100vh;
-        min-width: 100vw;
+        height: 100vh;
+        width: 100vw;
+        overflow-y: auto;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         position: fixed;
-        top: 0;
+        max-height: 80vh;
     }
 </style>
 

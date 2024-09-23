@@ -12,11 +12,14 @@
     $: if (text) {
         style += "transform: scale(0.8)";
     }
+
+    // controls if the content is shown once loading is done
+    export let showLoaded = true;
 </script>
 
-{#if loaded}
-    <slot {...$$restProps} />
-{:else}
+{#if loaded && showLoaded}
+    <slot {...$$restProps}/>
+{:else if !loaded}
     <div id="loader"
         {style}
          class={cn("animate-pulse rounded-md bg-foreground text-transparent w-[fit-content] children:opacity-0", classes)}

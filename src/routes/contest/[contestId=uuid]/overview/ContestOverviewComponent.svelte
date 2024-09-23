@@ -5,7 +5,7 @@
     import { type FormSchema as UploadFormSchema } from "./submission/upload-submission-schema";
     import { type FormSchema as TeamCreateFormSchema } from "./team/create-team-schema";
     import H1 from "$lib/components/utils/typography/H1.svelte";
-    import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
+    import { Button, buttonVariants } from "$lib/components/ui/button";
     import InviteComponent from "./team/InviteComponent.svelte";
     import EndNowButton from "./EndNowButton.svelte";
     import A from "$lib/components/utils/typography/A.svelte";
@@ -50,6 +50,9 @@
     </Loadable>
 {/if}
 <div class="gap-2 flex flex-col mt-4">
+    <Loadable showLoaded={false} {loaded} class="w-full bg-primary">
+        <Button/>
+    </Loadable>
     {#if loaded}
         {#if isOrganizer || contest.publicGrading}
             {#if isOrganizer || !ongoing}
@@ -59,8 +62,11 @@
                 <Warning>Contest is still running, you can't view submissions yet</Warning>
             {/if}
         {/if}
-        {#if isOrganizer && ongoing}
-            <EndNowButton contestId={contest.id} on:updated />
+        {#if isOrganizer}
+            <Button href="edit">Edit Contest</Button>
+            {#if ongoing}
+                <EndNowButton contestId={contest.id} on:updated />
+            {/if}
         {/if}
         {#if teamPageShown || uploadShown}
             <Tabs>

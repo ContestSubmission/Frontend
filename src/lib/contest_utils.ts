@@ -1,5 +1,3 @@
-import type { Contest, PersonalContestDTO } from "@contestsubmission/api-client";
-
-export function isOngoing(contest: PersonalContestDTO | Contest) {
+export function isOngoing(contest: { deadline: Date }) {
     return contest.deadline > new Date();
 }
